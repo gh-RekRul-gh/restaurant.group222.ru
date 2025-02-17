@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/migrations/2025-02-17_1_create_tables.xml
+  - include:
+      file: db/changelog/migrations/2025-02-18_2_add_order_statuses.xml

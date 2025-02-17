@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <!-- Создание всех таблиц в одном changeSet -->
+    <changeSet id="1" author="RedkinRV">
+        <!-- Создание таблицы Users -->
+        <createTable tableName="users">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="username" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="VARCHAR(100)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password_hash" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+<!--            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>-->
+<!--            <column name="role" type="VARCHAR(20)" defaultValue="user"/>-->
+        </createTable>
+
+        <!-- Создание таблицы Categories -->
+        <createTable tableName="categories">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Создание таблицы Menu -->
+        <createTable tableName="menu">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="TEXT"/>
+            <column name="price" type="DECIMAL(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_menu_category"
+                             referencedTableName="categories" referencedColumnNames="id"/>
+            </column>
+            <column name="image_url" type="VARCHAR(255)"/>
+        </createTable>
+
+        <!-- Создание таблицы Cart -->
+        <createTable tableName="cart">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_cart_user"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+<!--            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>-->
+<!--            <column name="is_ordered" type="BOOLEAN" defaultValue="false"/>-->
+        </createTable>
+
+        <!-- Создание таблицы CartItems -->
+        <createTable tableName="cartitems">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="cart_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_cartitems_cart"
+                             referencedTableName="cart" referencedColumnNames="id"/>
+            </column>
+            <column name="menu_item_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_cartitems_menu"
+                             referencedTableName="menu" referencedColumnNames="id"/>
+            </column>
+            <column name="quantity" type="INT" defaultValue="1"/>
+        </createTable>
+
+        <!-- Создание таблицы OrderStatuses -->
+        <createTable tableName="orderstatuses">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <!-- Создание таблицы Orders -->
+        <createTable tableName="orders">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_orders_user"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+            <column name="cart_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_orders_cart"
+                             referencedTableName="cart" referencedColumnNames="id"/>
+            </column>
+            <column name="total_price" type="DECIMAL(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="status" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_orders_status"
+                             referencedTableName="orderstatuses" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+
+        <!-- Создание таблицы LoyaltyProgram -->
+        <createTable tableName="loyaltyprogram">
+            <column name="id" type="SERIAL" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT">
+                <constraints nullable="false" foreignKeyName="fk_loyalty_user"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+            <column name="points" type="INT" defaultValue="0"/>
+<!--            <column name="last_updated" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>-->
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>
