@@ -23,11 +23,11 @@
       sticky
     >
       <v-tab v-model="currentItem"
-            v-for="tabs_item in tabs_items"
-            @click="currentItem=tabs_item.id - 1"
-            :key="tabs_item"
-            :value="tabs_item"
-            > {{tabs_item.name }}
+            v-for="tabs_item_name in tabs_items"
+            @click="currentItem=tabs_item_name.id - 1"
+            :key="tabs_item_name"
+            :value="tabs_item_name"
+            > {{tabs_item_name.name }}
       </v-tab>
     </v-tabs>
  </v-card>
@@ -67,61 +67,67 @@
                   <v-col > 
                     <!-- v-if="authorised" -->
                     <v-btn v-if="item.add & item.count == 0 & !authorised"
-                        rounded="xl"
-                        @click="login_notification_dialog = true"
+                        rounded="l"
                         class="add text-none text-subtitle"
                         outlined
+                        v-bind="props"
                         target="_blank"
                         variant="flat"
                         color="#D3CDBD"
                         size="small"
                         density="compact"
-                      >Добавить</v-btn>
-                      <v-dialog v-model="login_notification_dialog" 
+                      >Добавить
+                      <!-- <v-overlay
+                              activator="parent"
+                              location-strategy="connected"
+                              scroll-strategy="none"
+                          ><v-card class="pa-2" color="black">
+                               <span class="text-subtitle mx-auto ma-2 ml-3 mr-3">Для оформления заказа необходимо авторизоваться.</span>
+                            </v-card>
+                          </v-overlay> -->
+                      </v-btn>
+                      <!-- <v-dialog v-model="login_notification_dialog" 
                                 width="auto"
-        >
-          <v-card 
-            color="black"
-            dark
-            width="500"
-          ><v-card color="black" width="100%" height="100%" class="card_support">
-             <v-card-text>
-            <v-card color="black" dark >
-              <v-btn 
-                          class=" text-none text-subtitle mx-auto ma-2 ml-3 mr-3"
-                          text
-                          rounded="2"
-                          width="80%"
-                          target="_blank"
-                          variant="flat"
-                          color="#D3CDBD"
-                          large
-                          density="compact"
-                          >Уведомление!</v-btn>
-                      
-                          <v-btn
-                              @click="login_notification_dialog = false"
-                              class=" text-none text-subtitle mx-auto ma-2"
-                              light 
-                              rounded="2"
-                              icon
-                              target="_blank"
-                              variant="flat"
-                              color="#D3CDBD"
-                              small
-                              density="compact"
-                            ><v-img color="#D3CDBD" 
-                                  class="ma-2" 
-                                  src="../assets/close.svg"/></v-btn>
-
-                  </v-card>
-                  <v-card color="black" class="text-subtitle mx-auto ma-2 ml-3 mr-3">
-                    <v-card-subtitle>Для оформления заказа необходимо авторизоваться.</v-card-subtitle>
-                  </v-card>
-             </v-card-text>
-             </v-card>
-          </v-card>
-                      </v-dialog>
+                                  >
+                          <v-card 
+                            color="black"
+                            dark
+                            width="500"
+                          ><v-card color="black" width="100%" height="100%" class="card_support">
+                            <v-card-title>
+                              <v-btn 
+                                  class=" text-none text-subtitle mx-auto ma-2 ml-3 mr-3"
+                                  text
+                                  rounded="2"
+                                  width="80%"
+                                  target="_blank"
+                                  variant="flat"
+                                  color="#D3CDBD"
+                                  large
+                                  density="compact"
+                                  >Уведомление!</v-btn>
+                                      
+                              <v-btn
+                                  @click="login_notification_dialog = false"
+                                  class=" text-none text-subtitle mx-auto ma-2"
+                                  light 
+                                  rounded="2"
+                                  icon
+                                  target="_blank"
+                                  variant="flat"
+                                  color="#D3CDBD"
+                                  small
+                                  density="compact"
+                                ><v-img color="#D3CDBD" 
+                                      class="ma-2" 
+                                      src="../assets/close.svg"/></v-btn>
+                            </v-card-title>
+                            <v-card-text>
+                                    <span class="text-subtitle mx-auto ma-2 ml-3 mr-3">Для оформления заказа необходимо авторизоваться.</span>
+                            </v-card-text>
+                            </v-card>
+                          </v-card>
+                      </v-dialog> -->
                       <v-btn v-if="item.add & item.count == 0 & authorised"
                         rounded="xl"
                         @click="item.count++, item.add=!item.add"

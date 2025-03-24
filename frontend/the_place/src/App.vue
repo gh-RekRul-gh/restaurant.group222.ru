@@ -5,10 +5,8 @@
       color="black"
       dark
     >
-    <!-- <v-container> -->
-      <v-row >
+    <v-row>
     <v-col>
-                <!-- onclick="window.location='./'" | !ShoppingCart.order_placement & cart-->
       <div class="support">
         <v-btn v-if="$route.path !== '/' "
           @click="goToHome()"
@@ -21,11 +19,8 @@
           class="shrink mr-2 ml-2"
           contain
           color="#D3CDBD"
-          src="./assets/home5.svg"
           width="40px"
-        />
-        </v-btn>
-        <!-- onclick="window.location='./support'" | ShoppingCart.order_placement-->
+        src="./assets/home5.svg"/></v-btn>
         <v-btn v-if="$route.path == '/' "
           @click="support_dialog = true"
           target="_blank"
@@ -36,10 +31,8 @@
           alt="customer-care"
           class="shrink mr-2 ml-2"
           contain
-          src="./assets/customer-care.svg"
           width="40px"
-        /> 
-        </v-btn>
+          src="./assets/customer-care.svg"/></v-btn>
         <v-dialog 
           v-model="support_dialog"
           width="auto"
@@ -132,10 +125,7 @@
             class="home_title"
             contain
           >
-          THE PLACE
-          </span>
-        </v-btn>
-        
+          THE PLACE </span></v-btn>
       </div>
       </v-col>
 
@@ -153,10 +143,8 @@
           alt="shopping-cart"
           class="shrink mr-2 ml-2"
           contain
-          src="./assets/shopping cart.svg"
           width="40px"
-        />
-        </v-btn>
+          src="./assets/shopping cart.svg"/></v-btn>
         <v-btn v-if="!authorised"
           @click="login_dialog = true"
           class="enter text-none text-subtitle"
@@ -243,15 +231,16 @@
                                   src="./assets/close.svg"/></v-btn>
 
               <form class="mx-auto" color="#D3CDBD">
-               <!-- v-model="user.email" -->
-              <v-text-field  v-if="authorisation" label="Электронная почта"
+              <v-text-field  v-if="authorisation" v-model="emailEnter"
+                  label="Электронная почта"
                   type="email"
                   :rules="EmailRules"
                   color="#D3CDBD"
                   base-color="#D3CDBD"
                   clearable
                   ></v-text-field>
-                  <v-text-field v-if="authorisation" label="Пароль"
+                  <v-text-field v-if="authorisation" v-model="passwordEnter"
+                      label="Пароль"
                       fast-fail
                       :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                       :type="show ? 'text' : 'password'"
@@ -262,21 +251,23 @@
                       color="#D3CDBD"
                     >
                 </v-text-field>
-              <v-text-field  v-if="registration" label="Полное имя"
+              <v-text-field  v-if="registration" v-model="nameRegistration"
+                  label="Полное имя"
                   type="text"
                   :rules="NameRules"
                   color="#D3CDBD"
                   base-color="#D3CDBD"
                   clearable
                   ></v-text-field>
-              <v-text-field  v-if="registration" label="Электронная почта"
+              <v-text-field  v-if="registration" v-model="emailRegistration"
+                  label="Электронная почта"
                   type="email"
                   :rules="EmailRules"
                   color="#D3CDBD"
                   base-color="#D3CDBD"
                   clearable
                   ></v-text-field>
-                  <v-text-field v-if="registration"
+                  <v-text-field v-if="registration" v-model="passwordRegistration"
                       fast-fail
                       :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                       :type="show ? 'text' : 'password'"
@@ -326,14 +317,19 @@
                           small
                           density="compact"
                       >Забыли пароль?</v-btn>
-                      <v-dialog v-model="password_recover_dialog" width="500">
-                        <v-card dark color="black">
-                        <v-card dark color="black">
-                          <v-card-item dark>
-                            <v-btn width="88%" large text class="title_support text-none text-subtitle text-h6 text-md-h5 text-lg-h4 ma-2" color="#D3CDBD">Восстановление пароля</v-btn>
-                            <v-btn
+                      <v-dialog v-model="password_recover_dialog"  width="auto"
+                              >
+                                <v-card 
+                                  color="black"
+                                  dark
+                                  width="500"
+                                ><v-card color="black" width="100%" height="100%" class="card_support">
+                                  <v-card color="black" dark >
+                                    <v-card-title class="title_support ma-2"> 
+                                      <v-spacer></v-spacer>
+                             <v-btn
                                 @click="password_recover_dialog = false"
-                                class=" text-none text-subtitle mx-auto ma-2"
+                                class="text-none text-subtitle mx-left ma-2"
                                 light
                                 rounded="2"
                                 icon
@@ -344,13 +340,16 @@
                                 density="compact"
                               ><v-img color="#D3CDBD" 
                                     class="ma-2" 
-                                    src="./assets/close.svg"/></v-btn>                
-                            <v-card-subtitle class="title_support ma-2">Для восстановления пароля введите почту, которую Вы указывали при регистрации
-На нее будет отправлен код, который будет необходимо ввести ниже</v-card-subtitle>
-                              </v-card-item>
+                                    src="./assets/close.svg"/></v-btn>   
+                                    </v-card-title>
+                                    <v-card-subtitle class="title_support ma-2" color="#D3CDBD"> Восстановление пароля </v-card-subtitle>  
+                                  </v-card>             
+                            <v-card-subtitle x-small class="subtitle_support ma-2">Для восстановления пароля введите почту, которую Вы указывали при регистрации. <br>
+На нее будет отправлен код, который будет необходимо ввести далее.</v-card-subtitle>
+                              <!-- </v-card> -->
                               <v-card-text>
                         <form class="mx-auto" color="#D3CDBD">
-                          <v-text-field
+                          <v-text-field v-model="emailRecover"
                               label="Электронная почта"
                               type="email"
                               :rules="EmailRules"
@@ -371,14 +370,19 @@
                           large
                           density="compact"
                           >Отправить код</v-btn>
-                          <v-dialog v-model="password_recover2_dialog" width="500">
-                        <v-card dark color="black">
-                        <v-card dark color="black">
-                          <v-card-item dark>
-                            <v-btn width="88%" large text class="title_support text-none text-subtitle text-h6 text-md-h5 text-lg-h4 ma-2" color="#D3CDBD">Восстановление пароля</v-btn>
-                            <v-btn
-                                @click="password_recover2_dialog = false"
-                                class=" text-none text-subtitle mx-auto ma-2"
+                          <v-dialog v-model="password_recover2_dialog" width="auto"
+                              >
+                                <v-card 
+                                  color="black"
+                                  dark
+                                  width="500"
+                                ><v-card color="black" width="100%" height="100%" class="card_support">
+                                  <v-card color="black" dark >
+                                    <v-card-title class="title_support ma-2"> 
+                                      <v-spacer></v-spacer>
+                             <v-btn
+                                @click="password_recover_dialog = false"
+                                class="text-none text-subtitle mx-left ma-2"
                                 light
                                 rounded="2"
                                 icon
@@ -389,8 +393,10 @@
                                 density="compact"
                               ><v-img color="#D3CDBD" 
                                     class="ma-2" 
-                                    src="./assets/close.svg"/></v-btn>                
-                              </v-card-item>
+                                    src="./assets/close.svg"/></v-btn>   
+                                    </v-card-title>
+                                    <v-card-subtitle class="title_support ma-2" color="#D3CDBD"> Восстановление пароля </v-card-subtitle>  
+                                  </v-card>             
                               <v-card-text>
                         <form class="mx-auto" color="#D3CDBD">
                               <v-text>Введите код, отправленный Вам на почту:</v-text>
@@ -401,15 +407,14 @@
                                 color="#D3CDBD"
                                 length="6"
                               ></v-otp-input>
-                          <!-- <v-text-field
-                              label="Код, отправленный на почту"
+                          <!-- <v-text-field label="Код, отправленный на почту"
                               type="email"
                               :rules="EmailRules"
                               color="#D3CDBD"
                               base-color="#D3CDBD"
                               clearable
                               ></v-text-field> -->
-                              <v-text-field
+                              <v-text-field v-model="newPasswordFirst"
                                     fast-fail
                                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
                                     :type="show1 ? 'text' : 'password'"
@@ -421,7 +426,7 @@
                                     color="#D3CDBD"
                                   >
                               </v-text-field>
-                              <v-text-field
+                              <v-text-field v-model="newPasswordSecond"
                                     fast-fail
                                     :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
                                     :type="show2 ? 'text' : 'password'"
@@ -434,19 +439,31 @@
                                   >
                               </v-text-field>
                         </form>
-                        <v-btn
+                        <v-btn v-if="otp.length < 6 || loading"
                           @click="onClick()"
                           class=" text-none text-subtitle mx-auto ma-2"
-                          light
+                          dark
                           rounded="2"
                           width="100%"
                           target="_blank"
                           variant="flat"
                           color="#D3CDBD"
                           large
+                          disabled
                           density="compact"
-                          :disabled="otp.length < 6 || loading"
                           >Восстановить пароль</v-btn>
+                          <v-btn v-else
+                            @click="onClick()"
+                            class=" text-none text-subtitle mx-auto ma-2"
+                            light
+                            rounded="2"
+                            width="100%"
+                            target="_blank"
+                            variant="flat"
+                            color="#D3CDBD"
+                            large
+                            density="compact"
+                            >Восстановить пароль</v-btn>
                           </v-card-text>
                         </v-card>
                         </v-card>
@@ -473,10 +490,8 @@
           alt="profile"
           class="shrink mr-2 ml-2"
           contain
-          src="./assets/profile.svg"
           width="40px"
-        />
-        </v-btn> 
+          src="./assets/profile.svg"/> </v-btn> 
       </div>
       </v-col>
       </v-row>   
@@ -495,9 +510,8 @@
             alt="customer-care"
             class="shrink mr-2"
             contain
-            src="./assets/telephone.svg"
             width="20px"
-          />
+          src="./assets/telephone.svg"/>
         <strong contain class="footer_number_mail">+7(777) 777-77-77</strong>
         </div>    
 
@@ -513,10 +527,7 @@
               alt="home_title_footer"
               class="home_title_footer"
               contain
-            >
-            THE PLACE
-            </span>
-          </v-btn>
+            > THE PLACE </span> </v-btn>
 
         </div>
 
@@ -528,9 +539,9 @@
             alt="letter"
             class="shrink ml-2 mt-2"
             contain
-            src="./assets/letter.svg"
+            
             width="20px"
-          />
+          src="./assets/letter.svg"/>
         </div>
 
         <div class="footer_data">
@@ -547,6 +558,7 @@
 // import Main from './views/Main';
 // import Profile from './views/Profile';
 // import ShoppingCart from './views/ShoppingCart';
+import { required, minLength, between } from 'vuelidate/lib/validators'
 
 
 export default {
@@ -560,13 +572,22 @@ export default {
 
   data() {
     return {
+        emailEnter: '',
+        passwordEnter: '',
+
+        nameRegistration: '',
+        emailRegistration: '',
+        passwordRegistration: '',
+        
+        newPasswordFirst: '',
+        newPasswordSecond: '',
+        otp: '', // код для восстановления пароля
         user: {
             name: "Иван Иванов",
             support_message: "",
             email: "ivanivanov@gmail.com",
         },
         loading: false,
-        otp: '',
         password_recover_dialog: false,
         password_recover2_dialog: false,
         authorisation: true,
@@ -597,6 +618,15 @@ export default {
           // min: v => v.length >= 8 || 'Min 8 characters',
           // emailMatch: () => (`The email and password you entered don't match`),
         },
+    }
+  },
+  validations: {
+    name: {
+      required,
+      minLength: minLength(4)
+    },
+    age: {
+      between: between(20, 30)
     }
   },
   methods: {
@@ -741,6 +771,12 @@ export default {
   position: center;
   color: #D3CDBD;
 }
+.subtitle_support {
+    font-family: "Lexend Exa", sans-serif;
+    color: #D3CDBD;
+    letter-spacing: 2px;
+    text-align: center;
+}
 .title_support {
     font-family: "Lexend Exa", sans-serif;
     color: #D3CDBD;
@@ -748,7 +784,6 @@ export default {
     font-weight: bold;
     text-align: center;
 }
-
 </style>
 
 
