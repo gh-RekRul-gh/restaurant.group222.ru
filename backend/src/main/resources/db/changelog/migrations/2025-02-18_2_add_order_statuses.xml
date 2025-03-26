@@ -7,19 +7,19 @@
 
     <changeSet id="2" author="RedkinRV">
         <insert tableName="orderstatuses">
-            <column name="name" value="В обработке"/>
+            <column name="name" value="Подтвержден"/>
+        </insert>
+        <insert tableName="orderstatuses">
+            <column name="name" value="Принят в ресторане"/>
         </insert>
         <insert tableName="orderstatuses">
             <column name="name" value="Готовится"/>
         </insert>
         <insert tableName="orderstatuses">
-            <column name="name" value="Доставляется"/>
+            <column name="name" value="В пути"/>
         </insert>
         <insert tableName="orderstatuses">
-            <column name="name" value="Выполнен"/>
-        </insert>
-        <insert tableName="orderstatuses">
-            <column name="name" value="Отменен"/>
+            <column name="name" value="Доставлен"/>
         </insert>
     </changeSet>
 

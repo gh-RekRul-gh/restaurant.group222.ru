@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="3" author="RedkinRV">
+        <insert tableName="categories">
+            <column name="name" value="Салаты"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Закуски"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Горячие закуски"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Супы"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Лапша и рис"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Сашими"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Роллы"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Блюда на гриле"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Горячие блюда"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Десерты"/>
+        </insert>
+        <insert tableName="categories">
+            <column name="name" value="Напитки"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
