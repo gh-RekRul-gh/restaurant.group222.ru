@@ -21,11 +21,11 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "menus")
-public class Menu {
+@Table(name = "menuitems")
+public class MenuItem {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "menus_id_gen")
-    @SequenceGenerator(name = "menus_id_gen", sequenceName = "menus_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "menuitems_id_gen")
+    @SequenceGenerator(name = "menuitems_id_gen", sequenceName = "menuitems_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
 

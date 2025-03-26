@@ -36,7 +36,7 @@ public class Item {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "menu_item_id", nullable = false)
-    private Menu menuItem;
+    private MenuItem menuItem;
 
     @ColumnDefault("1")
     @Column(name = "quantity")

@@ -2,12 +2,12 @@ package ru.group222.restaurant.website.repository;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-import ru.group222.restaurant.website.model.Menu;
+import ru.group222.restaurant.website.model.MenuItem;
 
 import java.util.List;
 
 @Repository
-public interface MenuRepository extends CrudRepository<Menu, Long> {
+public interface MenuItemRepository extends CrudRepository<MenuItem, Long> {
     @Override
-    List<Menu> findAll();
+    List<MenuItem> findAll();
 }
