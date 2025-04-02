@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 @Schema(description = "Сущность блюда")
 public record MenuItemResponseDto(
         @Schema(description = "Id блюда", example = "1")
-        Long id,
+        Long menuItemId,
 
         @Schema(description = "Url изображения блюда", example = "*some url*")
         String imageUrl,

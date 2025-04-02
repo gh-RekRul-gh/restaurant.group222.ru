@@ -12,6 +12,22 @@ import org.springframework.stereotype.Service;
 public class EmailService {
     private final JavaMailSender javaMailSender;
 
+    public static final String PASSWORD_RESET_MESSAGE = """
+            Hello there,
+            Your password reset code is:
+                           \s
+            %s
+                           \s
+            This code will expire in 15 minutes""";
+
+    public static final String SUPPORT_CONTACT_MESSAGE = """
+            Hello there, %s,
+            We have received your support message and will try to respond within a couple of business days""";
+
+    public static final String ORDER_CREATED_MESSAGE = """
+            Hello there, %s,
+            Your order № %d was successfully created""";
+
     @Autowired
     public EmailService(JavaMailSender javaMailSender) {
         this.javaMailSender = javaMailSender;

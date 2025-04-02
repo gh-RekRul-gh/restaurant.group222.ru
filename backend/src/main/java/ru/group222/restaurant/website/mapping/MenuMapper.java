@@ -9,5 +9,6 @@ import ru.group222.restaurant.website.model.MenuItem;
 @Mapper(config = MapstructConfig.class)
 public interface MenuMapper {
     @Mapping(target = "categoryId", expression = "java(menuItem.getCategory().getId())")
+    @Mapping(target = "menuItemId", source = "id")
     MenuItemResponseDto menuToMenuItemResponseDto(MenuItem menuItem);
 }

@@ -3,7 +3,9 @@ package ru.group222.restaurant.website.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
-import ru.group222.restaurant.website.exception.InvalidCodeException;
+import org.springframework.transaction.annotation.Transactional;
+import ru.group222.restaurant.website.exception.PasswordResetCodeExpiredException;
+import ru.group222.restaurant.website.exception.PasswordResetCodeNotFoundException;
 import ru.group222.restaurant.website.model.Token;
 import ru.group222.restaurant.website.model.User;
 import ru.group222.restaurant.website.repository.TokenRepository;
@@ -18,20 +20,12 @@ import java.time.Instant;
 public class TokenService {
     private final TokenRepository tokenRepository;
 
-    public static final String PASSWORD_RESET_MESSAGE = """
-                Hello there,
-                Your password reset code is:
-                
-                %s
-                
-                This code will expire in 15 minutes""";
-
     public Token findTokenByCodeOrElseThrow(String code) {
         return tokenRepository.findByCode(code)
                 .orElseThrow(() -> {
                     String message = String.format("Token not found with code: %s", code);
                     log.warn(message);
-                    return new InvalidCodeException(message);
+                    return new PasswordResetCodeNotFoundException(message);
                 });
     }
 
@@ -47,10 +41,11 @@ public class TokenService {
 
             deleteToken(token);
 
-            throw new InvalidCodeException(message);
+            throw new PasswordResetCodeExpiredException(message);
         }
     }
 
+    @Transactional
     public Token createUserToken(User user) {
         Token token = new Token();
 

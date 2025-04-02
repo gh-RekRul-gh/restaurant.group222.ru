@@ -6,19 +6,19 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="2" author="RedkinRV">
-        <insert tableName="orderstatuses">
+        <insert tableName="order_statuses">
             <column name="name" value="Подтвержден"/>
         </insert>
-        <insert tableName="orderstatuses">
+        <insert tableName="order_statuses">
             <column name="name" value="Принят в ресторане"/>
         </insert>
-        <insert tableName="orderstatuses">
+        <insert tableName="order_statuses">
             <column name="name" value="Готовится"/>
         </insert>
-        <insert tableName="orderstatuses">
+        <insert tableName="order_statuses">
             <column name="name" value="В пути"/>
         </insert>
-        <insert tableName="orderstatuses">
+        <insert tableName="order_statuses">
             <column name="name" value="Доставлен"/>
         </insert>
     </changeSet>

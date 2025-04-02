@@ -1,6 +1,7 @@
 package ru.group222.restaurant.website.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -13,13 +14,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.group222.restaurant.website.dto.request.PasswordEditDto;
 import ru.group222.restaurant.website.dto.request.PasswordResetDto;
+import ru.group222.restaurant.website.dto.request.SupportContactDto;
+import ru.group222.restaurant.website.dto.request.UserEditDto;
 import ru.group222.restaurant.website.dto.request.UserEmailDto;
 import ru.group222.restaurant.website.dto.request.UserLoginDto;
 import ru.group222.restaurant.website.dto.request.UserRegisterDto;
 import ru.group222.restaurant.website.dto.response.ApiResponseDto;
-import ru.group222.restaurant.website.dto.response.UserDto;
-import ru.group222.restaurant.website.dto.response.UserResponseIdDto;
+import ru.group222.restaurant.website.dto.response.UserInfoResponseDto;
+import ru.group222.restaurant.website.dto.UserIdDto;
 import ru.group222.restaurant.website.service.UserService;
 
 @RestController
@@ -34,9 +38,9 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "409", description = "Конфликт - почта уже зарегистрирована")
     })
-    ResponseEntity<ApiResponseDto<UserResponseIdDto>> registerUser(@Valid @RequestBody UserRegisterDto userRegisterDto) {
-        UserResponseIdDto userResponseIdDto = userService.registerUser(userRegisterDto);
-        return ResponseEntity.ok(ApiResponseDto.success(userResponseIdDto));
+    ResponseEntity<ApiResponseDto<UserIdDto>> registerUser(@Valid @RequestBody UserRegisterDto userRegisterDto) {
+        UserIdDto userIdDto = userService.registerUser(userRegisterDto);
+        return ResponseEntity.ok(ApiResponseDto.success(userIdDto));
     }
 
     @PostMapping("/login")
@@ -46,13 +50,13 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "Введен неверный пароль"),
             @ApiResponse(responseCode = "404", description = "Пользователь с данным email не зарегистрирован")
     })
-    ResponseEntity<ApiResponseDto<UserResponseIdDto>> loginUser(@Valid @RequestBody UserLoginDto userLoginDto) {
-        UserResponseIdDto userResponseIdDto = userService.loginUser(userLoginDto);
-        return ResponseEntity.ok(ApiResponseDto.success(userResponseIdDto));
+    ResponseEntity<ApiResponseDto<UserIdDto>> loginUser(@Valid @RequestBody UserLoginDto userLoginDto) {
+        UserIdDto userIdDto = userService.loginUser(userLoginDto);
+        return ResponseEntity.ok(ApiResponseDto.success(userIdDto));
     }
 
     @PostMapping("/password-recovery")
-    @Operation(summary = "Запрос на получение кода для обновления пароля")
+    @Operation(summary = "Получение кода для обновления пароля")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
@@ -63,7 +67,7 @@ public class UserController {
     }
 
     @PatchMapping("/password-reset")
-    @Operation(summary = "Запрос на смену пароля с кодом")
+    @Operation(summary = "Смена пароля с кодом")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "400", description = "Код неверен или устарел")
@@ -73,15 +77,48 @@ public class UserController {
         return ResponseEntity.ok(ApiResponseDto.success());
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Запрос на получение информации о пользователе")
+    @GetMapping("/{userId}")
+    @Operation(summary = "Получение информации о пользователе")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Пользователь не найден")
     })
-    ResponseEntity<ApiResponseDto<UserDto>> getUser(@Valid @PathVariable Long id) {
-        UserDto userDto = userService.getUser(id);
-        return ResponseEntity.ok(ApiResponseDto.success(userDto));
+    ResponseEntity<ApiResponseDto<UserInfoResponseDto>> getUser(
+            @PathVariable @Parameter(description = "Id пользователя", example = "1") Long userId
+    ) {
+        UserInfoResponseDto userInfoResponseDto = userService.getUser(userId);
+        return ResponseEntity.ok(ApiResponseDto.success(userInfoResponseDto));
     }
 
+    @PatchMapping("/edit")
+    @Operation(summary = "Редактирование профиля пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
+    ResponseEntity<ApiResponseDto<Void>> userEditProfile(@Valid @RequestBody UserEditDto userEditDto) {
+        userService.editUser(userEditDto);
+        return ResponseEntity.ok(ApiResponseDto.success());
+    }
+
+    @PatchMapping("/edit/password")
+    @Operation(summary = "Редактирование пароля пользователя")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "404", description = "Пользователь не найден")
+    })
+    ResponseEntity<ApiResponseDto<Void>> userEditPassword(@Valid @RequestBody PasswordEditDto passwordEditDto) {
+        userService.editUserPassword(passwordEditDto);
+        return ResponseEntity.ok(ApiResponseDto.success());
+    }
+
+    @PostMapping("/support")
+    @Operation(summary = "Связь с тех. поддержкой")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK")
+    })
+    ResponseEntity<ApiResponseDto<Void>> supportContact(@Valid @RequestBody SupportContactDto supportContactDto) {
+        userService.supportContact(supportContactDto);
+        return ResponseEntity.ok(ApiResponseDto.success());
+    }
 }

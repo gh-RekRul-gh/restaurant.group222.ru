@@ -6,65 +6,65 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <changeSet id="4" author="RedkinRV">
-        <insert tableName="menuitems">
+        <insert tableName="menu_items">
             <column name="name" value="Салат с олениной, брусникой и чипсами из топинамбура"/>
             <column name="price" value="1500"/>
             <column name="category_id" value="1"/>
-            <column name="image_url" value="*some url here*"/>
+            <column name="image_url" value="https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png"/>
         </insert>
-        <insert tableName="menuitems">
+        <insert tableName="menu_items">
             <column name="name" value="Зеленый салат с хвойными побегами"/>
             <column name="price" value="1000"/>
             <column name="category_id" value="1"/>
-            <column name="image_url" value="*some url here*"/>
+            <column name="image_url" value="https://storage.yandexcloud.net/restaurant.group222.ru/salad1.png"/>
         </insert>
-        <insert tableName="menuitems">
+        <insert tableName="menu_items">
             <column name="name" value="Винегрет с мороженым из печеной капусты"/>
             <column name="price" value="900"/>
             <column name="category_id" value="1"/>
-            <column name="image_url" value="*some url here*"/>
+            <column name="image_url" value="https://storage.yandexcloud.net/restaurant.group222.ru/salad2.png"/>
         </insert>
-        <insert tableName="menuitems">
+        <insert tableName="menu_items">
             <column name="name" value="Намазки из сибирских рыб"/>
             <column name="price" value="2600"/>
             <column name="category_id" value="2"/>
-            <column name="image_url" value="*some url here*"/>
+            <column name="image_url" value="https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png"/>
         </insert>
-        <insert tableName="menuitems">
+        <insert tableName="menu_items">
             <column name="name" value="Грузди с луком и сметаной"/>
             <column name="price" value="900"/>
             <column name="category_id" value="2"/>
-            <column name="image_url" value="*some url here*"/>
+            <column name="image_url" value="https://storage.yandexcloud.net/restaurant.group222.ru/snack1.png"/>
         </insert>
-        <insert tableName="menuitems">
+        <insert tableName="menu_items">
             <column name="name" value="Намазка из печеного сельдерея"/>
             <column name="price" value="800"/>
             <column name="category_id" value="2"/>
-            <column name="image_url" value="*some url here*"/>
+            <column name="image_url" value="https://storage.yandexcloud.net/restaurant.group222.ru/snack3.png"/>
         </insert>
-        <insert tableName="menuitems">
+        <insert tableName="menu_items">
             <column name="name" value="Паштет из утки"/>
             <column name="price" value="900"/>
             <column name="category_id" value="2"/>
-            <column name="image_url" value="*some url here*"/>
+            <column name="image_url" value="https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png"/>
         </insert>
-        <insert tableName="menuitems">
+        <insert tableName="menu_items">
             <column name="name" value="Хуушууры"/>
             <column name="price" value="700"/>
             <column name="category_id" value="3"/>
-            <column name="image_url" value="*some url here*"/>
+            <column name="image_url" value="https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png"/>
         </insert>
-        <insert tableName="menuitems">
+        <insert tableName="menu_items">
             <column name="name" value="Рыбный пирог с соусом из одуванчиков"/>
             <column name="price" value="1300"/>
             <column name="category_id" value="3"/>
-            <column name="image_url" value="*some url here*"/>
+            <column name="image_url" value="https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png"/>
         </insert>
-        <insert tableName="menuitems">
+        <insert tableName="menu_items">
             <column name="name" value="Пирожок с томленой говяжьей щечкой"/>
             <column name="price" value="600"/>
             <column name="category_id" value="3"/>
-            <column name="image_url" value="*some url here*"/>
+            <column name="image_url" value="https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png"/>
         </insert>
     </changeSet>
 

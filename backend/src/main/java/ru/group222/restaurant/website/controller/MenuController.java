@@ -1,6 +1,7 @@
 package ru.group222.restaurant.website.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +32,14 @@ public class MenuController {
         return ResponseEntity.ok(ApiResponseDto.success(menu));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{menuItemId}")
     @Operation(summary = "Получение блюда по id")
-    ResponseEntity<ApiResponseDto<MenuItemResponseDto>> getMenuItem(@PathVariable Long id) {
-        MenuItemResponseDto menuItem = menuService.getMenuItem(id);
+    ResponseEntity<ApiResponseDto<MenuItemResponseDto>> getMenuItem(
+            @PathVariable @Parameter(description = "Id блюда в меню", example = "1") Long menuItemId
+    ) {
+        MenuItemResponseDto menuItem = menuService.getMenuItem(menuItemId);
 
-        log.info("Getting menu item with id = {} succeed", id);
+        log.info("Getting menu succeed item with id: {}", menuItemId);
 
         return ResponseEntity.ok(ApiResponseDto.success(menuItem));
     }
