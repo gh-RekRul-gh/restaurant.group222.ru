@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: website
+
+  datasource:
+    url: jdbc:postgresql://localhost:5434/website
+    username: admin
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: true
+    change-log: db/changelog/changelog.yaml
