@@ -15,11 +15,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "orderstatuses")
+@Table(name = "order_statuses")
 public class OrderStatus {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "orderstatuses_id_gen")
-    @SequenceGenerator(name = "orderstatuses_id_gen", sequenceName = "orderstatuses_id_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_statuses_id_gen")
+    @SequenceGenerator(name = "order_statuses_id_gen", sequenceName = "order_statuses_id_seq", allocationSize = 1)
     @Column(name = "id", nullable = false)
     private Long id;
 

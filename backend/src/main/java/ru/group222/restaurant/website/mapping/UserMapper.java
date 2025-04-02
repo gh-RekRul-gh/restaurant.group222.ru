@@ -5,7 +5,7 @@ import org.mapstruct.Mapping;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.group222.restaurant.website.dto.request.UserRegisterDto;
 import ru.group222.restaurant.website.config.MapstructConfig;
-import ru.group222.restaurant.website.dto.response.UserDto;
+import ru.group222.restaurant.website.dto.response.UserInfoResponseDto;
 import ru.group222.restaurant.website.model.User;
 
 import java.util.Locale;
@@ -18,6 +18,5 @@ public interface UserMapper {
     @Mapping(target = "phoneNumber", ignore = true)
     User userRegisterDtoToUser(UserRegisterDto userRegisterDto, PasswordEncoder passwordEncoder);
 
-    @Mapping(target = "password", source = "passwordHash")
-    UserDto userToUserDto(User user);
+    UserInfoResponseDto userToUserInfoDto(User user);
 }
