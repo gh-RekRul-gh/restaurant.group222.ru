@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="RedkinRV">
+        <!-- Creation of table Users -->
+        <createTable tableName="users">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password_hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone_number" type="varchar(20)"/>
+        </createTable>
+
+        <!-- Creation of table Categories -->
+        <createTable tableName="categories">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Creation of table Menu Items -->
+        <createTable tableName="menu_items">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text"/>
+            <column name="price" type="decimal(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_menu_item_category"
+                             referencedTableName="categories" referencedColumnNames="id"/>
+            </column>
+            <column name="image_url" type="varchar(255)"/>
+            <column name="is_available" type="boolean" defaultValue="true"/>
+        </createTable>
+
+        <!-- Creation of table Order Statuses -->
+        <createTable tableName="order_statuses">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+
+        <!-- Creation of table Orders -->
+        <createTable tableName="orders">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_order_user"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+            <column name="total_price" type="decimal(10, 2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp(0)" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="status_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_order_status"
+                             referencedTableName="order_statuses" referencedColumnNames="id"/>
+            </column>
+            <column name="phone_number" type="varchar(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="courier_comment" type="text"/>
+            <column name="payment_method" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Creation of table Cart Items -->
+        <createTable tableName="cart_items">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_cart_item_user"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+            <column name="menu_item_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_cart_item_menu_item"
+                             referencedTableName="menu_items" referencedColumnNames="id"/>
+            </column>
+            <column name="quantity" type="int" defaultValue="1">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Уникальные индексы -->
+        <addUniqueConstraint
+                tableName="cart_items"
+                columnNames="user_id, menu_item_id"
+                constraintName="uq_cart_items_user_menu_item"/>
+
+        <!-- Creation of table Order Items -->
+        <createTable tableName="order_items">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_order_item_user"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+            <column name="menu_item_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_order_item_menu_item"
+                             referencedTableName="menu_items" referencedColumnNames="id"/>
+            </column>
+            <column name="quantity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="order_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_order_item_order"
+                             referencedTableName="orders" referencedColumnNames="id"/>
+            </column>
+            <column name="unit_price" type="numeric(10,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addUniqueConstraint
+                tableName="order_items"
+                columnNames="order_id, menu_item_id"
+                constraintName="uq_order_items_order_menu_item"/>
+
+        <!-- Creation of table Tokens -->
+        <createTable tableName="tokens">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="int">
+                <constraints nullable="false" foreignKeyName="fk_token_user"
+                             referencedTableName="users" referencedColumnNames="id"/>
+            </column>
+            <column name="code" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="expires_at" type="timestamp(0)"
+                    defaultValueComputed="(NOW() + INTERVAL '15 minutes')">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- Creation of table Support Tickets -->
+        <createTable tableName="support_tickets">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp(0)" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_name" type="varchar(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(20)" defaultValue="'OPEN'">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+    </changeSet>
+
+</databaseChangeLog>
