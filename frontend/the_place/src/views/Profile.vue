@@ -175,6 +175,7 @@
                                                   fast-fail
                                                   :counter="100"
                                                   :rules="EmailRules"
+                                                  disabled
                                                   label="Электронная почта"
                                                   outlined
                                                   color="#D3CDBD"
@@ -182,7 +183,7 @@
                                                   clearable
                                         >
                                     </v-text-field>
-                                    <v-text-field v-model="user.password_hash"
+                                    <!-- <v-text-field v-model="user.password_hash"
                                                   fast-fail
                                                   :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
                                                   :type="show ? 'text' : 'password'"
@@ -195,7 +196,7 @@
                                                   base-color="#D3CDBD"
                                                   color="#D3CDBD"
                                         >
-                                    </v-text-field>
+                                    </v-text-field> -->
                                     <v-btn x-large class="list_items text-none text-subtitle" 
                                        color="#D3CDBD" 
                                        light

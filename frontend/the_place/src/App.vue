@@ -279,11 +279,10 @@
                       color="#D3CDBD"
                     >
                 </v-text-field>
-
               </form>
               </v-card>
                       <v-btn v-if="authorisation"
-                          @click="login_dialog = false, authorised = true"
+                          @click="login_dialog = false, authorised = true, login()"
                           class=" text-none text-subtitle mx-auto ma-2"
                           light
                           rounded="2"
@@ -295,7 +294,7 @@
                           density="compact"
                           >Войти</v-btn>
                       <v-btn v-if="registration"
-                          @click="login_dialog = false, registration = false, authorisation = true"
+                          @click="login_dialog = false, registration = false, authorisation = true, register()"
                           class=" text-none text-subtitle mx-auto ma-2"
                           light
                           rounded="2"
@@ -558,7 +557,7 @@
 // import Main from './views/Main';
 // import Profile from './views/Profile';
 // import ShoppingCart from './views/ShoppingCart';
-import { required, minLength, between } from 'vuelidate/lib/validators'
+// import { required, minLength, sameAs, maxLength, alpha, integer, email } from 'vuelidate/lib/validators'
 
 
 export default {
@@ -575,6 +574,7 @@ export default {
         emailEnter: '',
         passwordEnter: '',
 
+        id: '',
         nameRegistration: '',
         emailRegistration: '',
         passwordRegistration: '',
@@ -582,6 +582,7 @@ export default {
         newPasswordFirst: '',
         newPasswordSecond: '',
         otp: '', // код для восстановления пароля
+
         user: {
             name: "Иван Иванов",
             support_message: "",
@@ -599,37 +600,118 @@ export default {
         login_dialog: false,
         authorised: false,
         PaswordRules: { //!!!
-          // required: value => !!value || 'Required.',
-          // min: v => v.length >= 8 || 'Min 8 characters',
-          // emailMatch: () => (`The email and password you entered don't match`),
+          required: value => {!!value || 'Required.'},
+          min: v => v.length >= 6 || 'Min 6 characters',
+          max: v => v.length <= 100 || 'Max 100 characters',
+          emailMatch: () => (`The email and password you entered don't match`),
         },
         EmailRules: { //!!!
-          // required: value => !!value || 'Required.',
-          // min: v => v.length >= 8 || 'Min 8 characters',
-          // emailMatch: () => (`The email and password you entered don't match`),
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 8 || 'Min 8 characters',
+          max: v => v.length <= 100 || 'Max 100 characters',
+          email: value => {
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return pattern.test(value) || 'Invalid e-mail.'
+          },
         },
         NameRules: { //!!!
-          // required: value => !!value || 'Required.',
-          // min: v => v.length >= 8 || 'Min 8 characters',
-          // emailMatch: () => (`The email and password you entered don't match`),
+          required: value => !!value || 'Required.',
+          min: v => v.length >= 4 || 'Min 4 characters',
+          max: v => v.length <= 100 || 'Max 100 characters',
         },
         MessageRules: { //!!!
-          // required: value => !!value || 'Required.',
-          // min: v => v.length >= 8 || 'Min 8 characters',
-          // emailMatch: () => (`The email and password you entered don't match`),
+          required: value => !!value || 'Required.',
+          max: v => v.length <= 100 || 'Max 100 characters',
         },
     }
   },
-  validations: {
-    name: {
-      required,
-      minLength: minLength(4)
-    },
-    age: {
-      between: between(20, 30)
-    }
-  },
+  // validations: {
+  //   nameRegistration: {
+  //     required,
+  //     alpha, 
+  //     minLength: minLength(4),
+  //     maxLength: maxLength(100),
+  //   },
+  //   emailRegistration: {
+  //     required,
+  //     email,
+  //     minLength: minLength(4),
+  //     maxLength: maxLength(100),
+  //   },
+  //   emailEnter: {
+  //     required,
+  //     email,
+  //     minLength: minLength(4),
+  //     maxLength: maxLength(100),
+  //   },
+  //   otp: {
+  //     integer, 
+  //     minLength: minLength(6),
+  //   },
+  //   passwordEnter: {
+  //     required,
+  //     minLength: minLength(6),
+  //     maxLength: maxLength(100),
+  //   },
+  //   passwordRegistration: {
+  //     required,
+  //     minLength: minLength(6),
+  //     maxLength: maxLength(100),
+  //   },
+  //   newPasswordFirst: {
+  //     required,
+  //     minLength: minLength(6),
+  //     maxLength: maxLength(100),
+  //   },
+  //   newPasswordSecond: {
+  //     sameAsPassword: sameAs('newPasswordFirst')
+  //   }
+  // },
   methods: {
+     register(){
+            // this.$axios.get('http://localhost:8080/api/v1/user/register')
+            //     .then((response) => {
+            //         let id = response.data
+            //         let user = response.data
+            //         user.push({
+            //             name: this.nameRegistration,
+            //             email: this.emailRegistration,
+            //             password: this.passwordRegistration,
+            //         })
+            let user;
+            user.push({
+                name: this.nameRegistration,
+                email: this.emailRegistration,
+                password: this.passwordRegistration,
+            });
+            try {
+            this.$axios.post('http://localhost:8080/api/v1/user/register', user)
+            .then((response) => {
+                let id = response.data
+                this.id = id
+                    // this.$router.push('/login');
+            })
+            } catch(error) {
+              console.log(error);
+            }
+        },
+      login(){
+        let user;
+            user.push({
+                email: this.emailEnter,
+                password: this.passwordEnter,
+            });
+        try {
+            this.$axios.post('http://localhost:8080/api/v1/user/login', user)
+            .then((response) => {
+                let id = response.data
+                this.id = id
+                    // this.$router.push('/login');
+            })
+            } catch(error) {
+              console.log(error);
+            }
+      },
       onClick () {
         this.loading = true
 
@@ -647,7 +729,19 @@ export default {
       this.$router.push('/cart/')
     },
   },
-};
+  mounted(){
+          this.loadUser();
+          this.loadPosts();
+          setInterval((() => this.loadPosts()), 500);
+      },
+      watch:{
+          $route(){
+              this.loadUser()
+              this.loadPosts()
+          }
+      },
+    // props:['myId','user'],
+}
 
 
 </script>

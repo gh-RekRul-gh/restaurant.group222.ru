@@ -65,10 +65,58 @@
                     </v-row>
                   </v-col>
                   <v-col > 
-                    <!-- v-if="authorised" -->
-                    <v-btn v-if="item.add & item.count == 0 & !authorised"
+                     <v-btn v-if="item.count > 0 & authorised"
+                          rounded="l"
+                          class="plus_minus text-none text-subtitle ma-2"
+                          
+                          variant="flat"
+                          color="#D3CDBD"
+                          size="small"
+                          density="compact"
+                        >
+                        <v-btn v-if="item.count-1 >= 0"
+                               icon 
+                               target="_blank"
+                               @click="item.count--"
+                               >
+                         <template>
+                              <span color="#D3CDBD">–</span>
+                          </template>
+                        </v-btn>
+                        <v-btn v-if="item.count-1 < 0"
+                               icon 
+                               target="_blank"
+                               disabled
+                               @click="item.add=!item.add"
+                               >
+                         <template>
+                              <span color="#D3CDBD">–</span>
+                          </template>
+                        </v-btn>
+                        {{item.count}}
+                        <v-btn v-if="item.count >= 0 & item.count < item.stock_quantity"
+                               icon 
+                               target="_blank"
+                               @click="item.count++"
+                               >
+                        <template>
+                          <span color="#D3CDBD">+</span>
+                        </template>
+                        </v-btn>
+                        <v-btn v-if="item.count >= item.stock_quantity"
+                               icon 
+                               disabled
+                               target="_blank"
+                               >
+                        <template>
+                          <span color="#D3CDBD">+</span>
+                        </template>
+                        </v-btn>
+                        </v-btn>                   
+                         <!-- v-if="authorised" -->
+                    <v-btn v-if="item.count >= 0 & !authorised"
                         rounded="l"
-                        class="add text-none text-subtitle"
+                        class="add text-none text-subtitle ma-2"
                         outlined
                         v-bind="props"
                         target="_blank"
@@ -128,10 +176,21 @@
                             </v-card>
                           </v-card>
                       </v-dialog> -->
-                      <v-btn v-if="item.add & item.count == 0 & authorised"
+                      <v-btn v-if="item.count > 0 & authorised"
                         rounded="xl"
-                        @click="item.count++, item.add=!item.add"
+                        @click="item.add=!item.add"
                         class="add text-none text-subtitle"
+                        outlined
+                        target="_blank"
+                        variant="flat"
+                        color="#D3CDBD"
+                        size="small"
+                        density="compact"
+                      >Добавить</v-btn>
+                       <v-btn v-if="item.count == 0 & authorised"
+                        rounded="xl"
+                        @click="item.count++"
+                        class="add text-none text-subtitle ma-2"
                         outlined
                         target="_blank"
                         variant="flat"
@@ -141,54 +200,7 @@
                       >Добавить</v-btn>
                       <!-- <v-btn icon v-model="dialog" @click="item.isActive = true">{{item.isActive}}</v-btn>   -->
                       
-                    <v-btn v-if="!item.add & item.count >= 0"
-                          rounded="l"
-                          class="plus_minus text-none text-subtitle"
-                          
-                          variant="flat"
-                          color="#D3CDBD"
-                          size="small"
-                          density="compact"
-                        >
-                        <v-btn v-if="item.count-1 >= 0"
-                               icon 
-                               target="_blank"
-                               @click="item.count--"
-                               >
-                         <template>
-                              <span color="#D3CDBD">–</span>
-                          </template>
-                        </v-btn>
-                        <v-btn v-if="item.count-1 < 0"
-                               icon 
-                               target="_blank"
-                               disabled
-                               @click="item.add=!item.add"
-                               >
-                         <template>
-                              <span color="#D3CDBD">–</span>
-                          </template>
-                        </v-btn>
-                        {{item.count}}
-                        <v-btn v-if="item.count >= 0 & item.count < item.stock_quantity"
-                               icon 
-                               target="_blank"
-                               @click="item.count++"
-                               >
-                        <template>
-                          <span color="#D3CDBD">+</span>
-                        </template>
-                        </v-btn>
-                        <v-btn v-if="item.count >= item.stock_quantity"
-                               icon 
-                               disabled
-                               target="_blank"
-                               >
-                        <template>
-                          <span color="#D3CDBD">+</span>
-                        </template>
-                        </v-btn>
-                        </v-btn>
+                   
                   </v-col>
                 </v-row>
                 </v-container>
