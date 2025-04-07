@@ -7,6 +7,10 @@
 
     <changeSet id="3" author="RedkinRV">
         <insert tableName="categories">
+            <column name="id" value="0"/>
+            <column name="name" value="Все"/>
+        </insert>
+        <insert tableName="categories">
             <column name="name" value="Салаты"/>
         </insert>
         <insert tableName="categories">
