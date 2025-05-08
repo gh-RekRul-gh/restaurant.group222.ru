@@ -66,8 +66,8 @@
               <v-text-field v-model="user.name"
                   :counter="100"
                   clearable
-                  :rules="NameRules"
-                  label="Полное имя*"
+                  :rules="[NameRules.required, NameRules.max]"
+                  label="Полное имя"
                   base-color="#D3CDBD"
                   color="#D3CDBD"                                            
                   ></v-text-field>
@@ -76,14 +76,14 @@
                   type="email"
                   disabled
                   :counter="100"
-                  :rules="EmailRules"
+                  :rules="[EmailRules.required, EmailRules.min, EmailRules.max, EmailRules.email]"
                   color="#D3CDBD"
                   base-color="#D3CDBD"
                   clearable
                   ></v-text-field>
                    <v-text-field v-model="user.support_message"
                   :counter="100"
-                  :rules="MessageRules"
+                  :rules="[MessageRules.required, MessageRules.max]"
                   label="Сообщение"
                   color="#D3CDBD"
                   base-color="#D3CDBD"
@@ -92,7 +92,7 @@
               </form>
               </v-card>
                       <v-btn
-                      @click="support_dialog = false"
+                      @click="support_dialog = false, send_support_message()"
                       class=" text-none text-subtitle mx-auto ma-2"
                       light
                       rounded="2"
@@ -234,7 +234,7 @@
               <v-text-field  v-if="authorisation" v-model="emailEnter"
                   label="Электронная почта"
                   type="email"
-                  :rules="EmailRules"
+                  :rules="[EmailRules.required, EmailRules.min, EmailRules.max, EmailRules.email]"
                   color="#D3CDBD"
                   base-color="#D3CDBD"
                   clearable
@@ -254,7 +254,7 @@
               <v-text-field  v-if="registration" v-model="nameRegistration"
                   label="Полное имя"
                   type="text"
-                  :rules="NameRules"
+                  :rules="[NameRules.required, NameRules.max]"
                   color="#D3CDBD"
                   base-color="#D3CDBD"
                   clearable
@@ -262,7 +262,7 @@
               <v-text-field  v-if="registration" v-model="emailRegistration"
                   label="Электронная почта"
                   type="email"
-                  :rules="EmailRules"
+                  :rules="[EmailRules.required, EmailRules.min, EmailRules.max, EmailRules.email]"
                   color="#D3CDBD"
                   base-color="#D3CDBD"
                   clearable
@@ -273,7 +273,7 @@
                       :type="show ? 'text' : 'password'"
                       @click:append="show = !show"
                       password
-                      :rules="PaswordRules"
+                      :rules="[PaswordRules.required, PaswordRules.min, PaswordRules.max]"
                       label="Пароль"
                       base-color="#D3CDBD"
                       color="#D3CDBD"
@@ -351,7 +351,7 @@
                           <v-text-field v-model="emailRecover"
                               label="Электронная почта"
                               type="email"
-                              :rules="EmailRules"
+                              :rules="[EmailRules.required, EmailRules.min, EmailRules.max, EmailRules.email]"
                               color="#D3CDBD"
                               base-color="#D3CDBD"
                               clearable
@@ -380,7 +380,7 @@
                                     <v-card-title class="title_support ma-2"> 
                                       <v-spacer></v-spacer>
                              <v-btn
-                                @click="password_recover_dialog = false"
+                                @click="password_recover2_dialog = false"
                                 class="text-none text-subtitle mx-left ma-2"
                                 light
                                 rounded="2"
@@ -419,7 +419,7 @@
                                     :type="show1 ? 'text' : 'password'"
                                     @click:append="show1 = !show1"
                                     password
-                                    :rules="PaswordRules"
+                                    :rules="[PaswordRules.required, PaswordRules.min, PaswordRules.max]"
                                     label="Новый пароль"
                                     base-color="#D3CDBD"
                                     color="#D3CDBD"
@@ -431,7 +431,7 @@
                                     :type="show2 ? 'text' : 'password'"
                                     @click:append="show2 = !show2"
                                     password
-                                    :rules="PaswordRules"
+                                    :rules="[PaswordRules.required, PaswordRules.min, PaswordRules.max, passwordConfirmationRule()]"
                                     label="Подтвердите новый пароль"
                                     base-color="#D3CDBD"
                                     color="#D3CDBD"
@@ -558,9 +558,10 @@
 // import Profile from './views/Profile';
 // import ShoppingCart from './views/ShoppingCart';
 // import { required, minLength, sameAs, maxLength, alpha, integer, email } from 'vuelidate/lib/validators'
-
+import axios from 'axios';
 
 export default {
+  
   name: 'App',
 
   components: {
@@ -573,8 +574,8 @@ export default {
     return {
         emailEnter: '',
         passwordEnter: '',
-
-        id: '',
+        emailRecover: '',
+        userId: '',
         nameRegistration: '',
         emailRegistration: '',
         passwordRegistration: '',
@@ -582,7 +583,6 @@ export default {
         newPasswordFirst: '',
         newPasswordSecond: '',
         otp: '', // код для восстановления пароля
-
         user: {
             name: "Иван Иванов",
             support_message: "",
@@ -598,76 +598,57 @@ export default {
         show2:false,
         support_dialog: false,
         login_dialog: false,
-        authorised: false,
+        authorised: false, // true
         PaswordRules: { //!!!
-          required: value => {!!value || 'Required.'},
-          min: v => v.length >= 6 || 'Min 6 characters',
-          max: v => v.length <= 100 || 'Max 100 characters',
+          required: value => {!!value || 'Необходимо заполнить'}, //Required.
+          min: v => v.length >= 6 || 'Минимум 6 символов', //Min 6 characters
+          max: v => v.length <= 100 || 'Не более 100 символов', //Max 100 characters
           emailMatch: () => (`The email and password you entered don't match`),
         },
         EmailRules: { //!!!
-          required: value => !!value || 'Required.',
-          min: v => v.length >= 8 || 'Min 8 characters',
-          max: v => v.length <= 100 || 'Max 100 characters',
+          required: value => !!value || 'Необходимо заполнить', //Required.
+          min: v => v.length >= 8 || 'Минимум 8 символов', //Min 8 characters
+          max: v => v.length <= 100 || 'Не более 100 символов', //Max 100 characters
           email: value => {
             const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-            return pattern.test(value) || 'Invalid e-mail.'
+            return pattern.test(value) || 'Неверный адрес электронной почты' // Invalid e-mail.
           },
         },
         NameRules: { //!!!
-          required: value => !!value || 'Required.',
-          min: v => v.length >= 4 || 'Min 4 characters',
-          max: v => v.length <= 100 || 'Max 100 characters',
-        },
+          required: value => !!value || 'Необходимо заполнить', //Required.
+          // min: v => v.length >= 4 || 'Минимум 4 символа', //Min 4 characters
+          max: v => v.length <= 100 || 'Не более 100 символов', //Max 100 characters
+        }, 
         MessageRules: { //!!!
-          required: value => !!value || 'Required.',
-          max: v => v.length <= 100 || 'Max 100 characters',
+          required: value => !!value || 'Необходимо заполнить', //Required.
+          max: v => v.length <= 100 || 'Не более 100 символов', //Max 100 characters
         },
     }
   },
-  // validations: {
-  //   nameRegistration: {
-  //     required,
-  //     alpha, 
-  //     minLength: minLength(4),
-  //     maxLength: maxLength(100),
-  //   },
-  //   emailRegistration: {
-  //     required,
-  //     email,
-  //     minLength: minLength(4),
-  //     maxLength: maxLength(100),
-  //   },
-  //   emailEnter: {
-  //     required,
-  //     email,
-  //     minLength: minLength(4),
-  //     maxLength: maxLength(100),
-  //   },
-  //   otp: {
-  //     integer, 
-  //     minLength: minLength(6),
-  //   },
-  //   passwordEnter: {
-  //     required,
-  //     minLength: minLength(6),
-  //     maxLength: maxLength(100),
-  //   },
-  //   passwordRegistration: {
-  //     required,
-  //     minLength: minLength(6),
-  //     maxLength: maxLength(100),
-  //   },
-  //   newPasswordFirst: {
-  //     required,
-  //     minLength: minLength(6),
-  //     maxLength: maxLength(100),
-  //   },
-  //   newPasswordSecond: {
-  //     sameAsPassword: sameAs('newPasswordFirst')
-  //   }
-  // },
+  
   methods: {
+    send_support_message() {
+      // let user;
+      //       user.push({
+      //           name: this.user.name,
+      //           email: this.user.email,
+      //           message: this.user.support_message,
+      //       });
+            try {
+            axios.post('http://localhost:8080/api/v1/user/support', {
+                name: this.user.name,
+                email: this.user.email,
+                message: this.user.support_message,
+            })
+            // .then((response) => {
+            //     let id = response.data
+            //     this.id = id
+            //         // this.$router.push('/login');
+            // })
+            } catch(error) {
+              console.log(error);
+            }
+    },
      register(){
             // this.$axios.get('http://localhost:8080/api/v1/user/register')
             //     .then((response) => {
@@ -678,40 +659,60 @@ export default {
             //             email: this.emailRegistration,
             //             password: this.passwordRegistration,
             //         })
-            let user;
-            user.push({
+            // let user;
+            // user.push({
+            //     name: this.nameRegistration,
+            //     email: this.emailRegistration,
+            //     password: this.passwordRegistration,
+            // });
+            try {
+            axios.post('http://localhost:8080/api/v1/user/register', {
                 name: this.nameRegistration,
                 email: this.emailRegistration,
                 password: this.passwordRegistration,
-            });
-            try {
-            this.$axios.post('http://localhost:8080/api/v1/user/register', user)
+            })
             .then((response) => {
                 let id = response.data
-                this.id = id
-                    // this.$router.push('/login');
+                this.userId = id
             })
             } catch(error) {
               console.log(error);
             }
         },
       login(){
-        let user;
-            user.push({
+        // let user;
+        //     user.push({
+        //         email: this.emailEnter,
+        //         password: this.passwordEnter,
+        //     });
+        try {
+            axios.post('http://localhost:8080/api/v1/user/login', {
                 email: this.emailEnter,
                 password: this.passwordEnter,
-            });
-        try {
-            this.$axios.post('http://localhost:8080/api/v1/user/login', user)
+            })
             .then((response) => {
                 let id = response.data
-                this.id = id
+                this.userId = id
                     // this.$router.push('/login');
             })
             } catch(error) {
               console.log(error);
             }
       },
+      password_recovery(){
+        try {
+            axios.post('http://localhost:8080/api/v1/user/password-recovery', {
+                email: this.emailRecover,
+            })
+            // .then((response) => {
+            //     let data = response.data
+            //     console.log(data);
+            // })
+            } catch(error) {
+              console.log(error);
+            }
+      },
+
       onClick () {
         this.loading = true
 
@@ -720,27 +721,31 @@ export default {
         }, 2000)
       },
     goToHome() {
-      this.$router.push('/')
+      const userId = this.userId
+      if (userId != null)
+        this.$router.push(`/user/${userId}`)
+      else 
+        this.$router.push(`/user`)
     },
     goToProfile() {
-      this.$router.push('/profile/')
+      const userId = this.userId
+      this.$router.push(`/profile/${userId}`)
     },
     goToCart() {
-      this.$router.push('/cart/')
+      const userId = this.userId
+      this.$router.push(`/cart/${userId}`)
     },
   },
-  mounted(){
-          this.loadUser();
-          this.loadPosts();
-          setInterval((() => this.loadPosts()), 500);
-      },
-      watch:{
-          $route(){
-              this.loadUser()
-              this.loadPosts()
+      computed: {
+          passwordConfirmationRule() {
+            return () => (this.newPasswordFirst === this.newPasswordSecond) || 'Пароли не совпадают' // Passwords must match
           }
       },
-    // props:['myId','user'],
+   
+    // props:['userId'],
+    // setup(props) {
+    // console.log(props.userId)
+  // }
 }
 
 

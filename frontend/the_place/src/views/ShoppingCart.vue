@@ -26,7 +26,7 @@
                                                                                 icon 
                                                                                 v-bind="props"
                                                                                 target="_blank"
-                                                                                @click="item.count = 0"
+                                                                                @click="item.count = 0, delete_cart_item(item.cartItemId)"
                                                                                 > 
                                                                         <v-img color="#D3CDBD" 
                                                                             class="ma-2" 
@@ -36,8 +36,9 @@
                                                             </v-card>
                                                         </v-col>
                                                         <v-col cols="2">
+                                                            <!-- :src="require('../assets/' + item.imageUrl + '.png')" -->
                                                             <v-img id="item_image" 
-                                                                :src="require('../assets/' + item.image + '.png')"
+                                                                :src="item.imageUrl"
                                                                 />
                                                         </v-col>
                                                         <v-col cols="5">
@@ -488,7 +489,7 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 
 export default {    
     name: 'ShoppingCart_',
@@ -527,14 +528,14 @@ export default {
             payment_method: 2,
             items: [
             { 
-            image: "salad3",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
             name: 'Салат с олениной, брусникой и чипсами из топинамбура',
             count: 1,
             price: 1500,
             stock_quantity: 10,
             },
             {
-            image: "snack4",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
             name: 'Паштет из утки',
             price: 900,
             count: 2,
@@ -542,17 +543,60 @@ export default {
             }
             ],
              },
+            cart: {
+                cartItemId: 1,
+                quantity: 5,
+                menuItemId: 1,
+                name: "Салат с олениной, брусникой и чипсами из топинамбура",
+                price: 1500,
+                imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png"
+            },
       }
     },
     
     methods: {
+        delete_cart_item(item_id){
+            try {
+           axios.delete('http://localhost:8080/api/v1/cart/items/', item_id)
+            
+            } catch(error) {
+              console.log(error);
+            }
+        },
+        get_cart(){
+            try {
+            axios.get('http://localhost:8080/api/v1/user/1/cart', this.userId)
+            .then((response) => {
+                this.cart = response.data
+                // let allItems = response.data
+                // this.cart = []
+                // for(let item in allItems){
+                //     this.cart.push(allItems[item])
+                // }
+                // this.id = id
+                    // this.$router.push('/login');
+            })
+            } catch(error) {
+              console.log(error);
+            }
+        },
          goToOrderFormation() {
             this.$router.push('/formation')
         },
         goToHome() {
             this.$router.push('/')
         },
-    }
+    },
+    mounted(){
+        this.get_cart();
+        setInterval(() => this.get_cart(), 500); //?????
+    },
+    watch:{
+        $route(){
+            this.get_cart()
+        }
+    },
+    props: ['userId']
 };
 
 </script>

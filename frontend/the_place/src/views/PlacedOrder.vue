@@ -81,14 +81,14 @@ export default {
             payment_method: 2,
             items: [
             { 
-            image: "salad3",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
             name: 'Салат с олениной, брусникой и чипсами из топинамбура',
             count: 1,
             price: 1500,
             stock_quantity: 10,
             },
             {
-            image: "snack4",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
             name: 'Паштет из утки',
             price: 900,
             count: 2,

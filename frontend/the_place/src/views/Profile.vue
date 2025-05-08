@@ -18,7 +18,7 @@
                                        class="list_items text-none text-subtitle" 
                                        color="#D3CDBD" 
                                        outlined
-                                       @click="current_order = false, personal_data = true, completed_order = false"
+                                       @click="current_order = false, personal_data = true, completed_order = false, get_user()"
                                        width="100%"
                                        target="_blank"
                                        variant="flat"
@@ -50,7 +50,7 @@
                                        class="list_items text-none text-subtitle" 
                                        color="#D3CDBD" 
                                        outlined
-                                       @click="current_order = true, personal_data = false, completed_order = false"
+                                       @click="current_order = true, personal_data = false, completed_order = false, change_password = false, get_current_orders()"
                                        width="100%"
                                        target="_blank"
                                        variant="flat"
@@ -79,7 +79,7 @@
                                        class="list_items text-none text-subtitle" 
                                        color="#D3CDBD" 
                                        outlined
-                                       @click="current_order = false, personal_data = false, completed_order = true"
+                                       @click="current_order = false, personal_data = false, completed_order = true, change_password = false, get_completed_orders()"
                                        width="100%"
                                        target="_blank"
                                        variant="flat"
@@ -114,7 +114,6 @@
                                        target="_blank"
                                        variant="flat"
                                        rounded="2"
-                                       
                                        >
                                     Выйти
                                 </v-btn>
@@ -125,7 +124,7 @@
                     </v-col>
                     <v-divider vertical color="#D3CDBD"></v-divider>
                     <v-col cols="8">
-                         <v-card v-if="personal_data"
+                         <v-card v-if="personal_data & !change_password"
                                     color="black" 
                                     class="profile_card mx-auto" 
                                     max-width="85%" 
@@ -150,7 +149,7 @@
                                     <v-text-field v-model="user.name"
                                                   fast-fail
                                                   :counter="100"
-                                                  :rules="NameRules"
+                                                  :rules="[NameRules.required, NameRules.min]"
                                                   label="Полное имя"
                                                   outlined
                                                   base-color="#D3CDBD"
@@ -163,7 +162,7 @@
                                                   placeholder="7777777777"
                                                   :counter="10"
                                                   prefix="+7"
-                                                  :rules="PhoneRules"
+                                                  :rules="[PhoneRules.required, PhoneRules.phone]"
                                                   label="Номер телефона"
                                                   outlined
                                                   color="#D3CDBD"
@@ -174,7 +173,7 @@
                                     <v-text-field v-model="user.email"
                                                   fast-fail
                                                   :counter="100"
-                                                  :rules="EmailRules"
+                                                  :rules="[EmailRules.required, EmailRules.min, EmailRules.max, EmailRules.email]"
                                                   disabled
                                                   label="Электронная почта"
                                                   outlined
@@ -197,15 +196,120 @@
                                                   color="#D3CDBD"
                                         >
                                     </v-text-field> -->
-                                    <v-btn x-large class="list_items text-none text-subtitle" 
+                                    <v-btn x-large class="list_items text-none text-subtitle ma-2" 
+                                        @click="change_password = true"
                                        color="#D3CDBD" 
                                        light
-                                       width="50%"
+                                       width="48%"
+                                       target="_blank"
+                                       variant="flat"
+                                       rounded="2">
+                                        Изменить пароль
+                                    </v-btn>
+                                    <v-btn x-large class="list_items text-none text-subtitle ma-2" 
+                                       color="#D3CDBD" 
+                                       light
+                                       width="48%"
                                        target="_blank"
                                        variant="flat"
                                        rounded="2">
                                         Сохранить изменения
                                     </v-btn>
+                                </form>
+                                </v-col>
+                            </v-row>
+                         </v-container>
+                        </v-card>
+                        <v-card v-if="change_password"
+                                    color="black" 
+                                    class="profile_card mx-auto" 
+                                    max-width="85%" 
+                                        >
+                         <v-container>
+                            <v-row>
+                                <v-col cols="5">
+                                </v-col>
+                                <v-col cols="7">
+                                  <img 
+                                    alt="profile"
+                                    class="img_profile shrink mr-2 ml-2"
+                                    contain
+                                    src="../assets/profile.svg"
+                                    width="80px"
+                                    />
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col cols="12">
+                                <form class="mx-auto" >
+                                    <!-- <v-text-field v-model="user.oldPassword"
+                                                  fast-fail
+                                                  :append-icon="show ? 'mdi-eye' : 'mdi-eye-off'"
+                                                  :type="show ? 'text' : 'password'"
+                                                  @click:append="show = !show"
+                                                  password
+                                                  :counter="100"
+                                                  :rules="[rules.required, rules.min]"
+                                                  label="Текущий пароль"
+                                                  underlined
+                                                  base-color="#D3CDBD"
+                                                  color="#D3CDBD"
+                                        >
+                                    </v-text-field> -->
+                                    <v-text-field v-model="user.newPassword"
+                                                  fast-fail
+                                                  :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                  :type="show1 ? 'text' : 'password'"
+                                                  @click:append="show1 = !show1"
+                                                  password
+                                                  :counter="100"
+                                                  :rules="[rules.required, rules.min]"
+                                                  label="Новый пароль"
+                                                  underlined
+                                                  base-color="#D3CDBD"
+                                                  color="#D3CDBD"
+                                        >
+                                    </v-text-field>
+                                    <v-text-field v-model="user.new2Password"
+                                                  fast-fail
+                                                  :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+                                                  :type="show2 ? 'text' : 'password'"
+                                                  @click:append="show2 = !show2"
+                                                  password
+                                                  :counter="100"
+                                                  :rules="[rules.required, rules.min, passwordConfirmationRule()]"
+                                                  label="Подтвердите новый пароль"
+                                                  underlined
+                                                  base-color="#D3CDBD"
+                                                  color="#D3CDBD"
+                                        >
+                                    </v-text-field>
+                                    <v-row>
+                                        <v-col cols="6">
+                                    <v-btn x-large v-if="!change_password"
+                                       class="list_items text-none text-subtitle ma-2" 
+                                       @click="change_password = true"
+                                       color="#D3CDBD" 
+                                       light
+                                       width="100%"
+                                       target="_blank"
+                                       variant="flat"
+                                       rounded="2">
+                                        Изменить пароль
+                                    </v-btn>
+                                        </v-col>
+                                        <v-col cols="6">
+                                    <v-btn x-large class="list_items text-none text-subtitle ma-2" 
+                                       color="#D3CDBD" 
+                                       light
+                                       width="100%"
+                                       target="_blank"
+                                       variant="flat"
+                                       rounded="2">
+                                        Сохранить изменения
+                                    </v-btn>
+                                        </v-col>
+                                    </v-row>
                                 </form>
                                 </v-col>
                             </v-row>
@@ -232,9 +336,24 @@
                                              src="../assets/status1.svg"
                                              width="60%"
                                             />
+                                        <v-img v-if="order.status_id == 2"
+                                              class="status_image shrink mr-2 ml-2" 
+                                             src="../assets/status2.svg"
+                                             width="60%"
+                                            />
                                         <v-img v-if="order.status_id == 3"
                                               class="status_image shrink mr-2 ml-2" 
                                              src="../assets/status3.svg"
+                                             width="60%"
+                                            />
+                                        <v-img v-if="order.status_id == 4"
+                                              class="status_image shrink mr-2 ml-2" 
+                                             src="../assets/status4.svg"
+                                             width="60%"
+                                            />
+                                        <v-img v-if="order.status_id == 5"
+                                              class="status_image shrink mr-2 ml-2" 
+                                             src="../assets/status5.svg"
                                              width="60%"
                                             />
                                         </v-col>
@@ -257,8 +376,9 @@
                                                 <v-card color="black" >
                                                     <v-row>
                                                         <v-col cols="2">
+                                                            <!-- :src="require('../assets/' + item.image + '.png')" -->
                                                             <v-img id="item_image" 
-                                                                :src="require('../assets/' + item.image + '.png')"
+                                                                :src="item.imageUrl"
                                                                 />
                                                         </v-col>
                                                         <v-col cols="7">
@@ -363,11 +483,12 @@
                                         <v-slide-group show-arrows>
                                             <v-slide-group-item class="mx-auto" v-for="comp_item in comp_order.items"
                                             :key="comp_item">
+                                            <!--    :src="require('../assets/' + comp_item.image + '.png')" -->
                                             <v-img  width="150"
                                                     cover
                                                     border-radius="20px"
                                                     class="comp_order_image ma-2"
-                                                    :src="require('../assets/' + comp_item.image + '.png')"
+                                                    :src="comp_item.imageUrl"
                                                     />
                                             </v-slide-group-item>
                                         </v-slide-group>
@@ -391,6 +512,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 
 export default {    
     name: 'Profile_',
@@ -398,6 +520,14 @@ export default {
     data () {
       return {
         show: false,
+        
+        show1: false,
+        show2: false,
+        rules: {
+          required: value => !!value || 'Необходимо заполнить', // Required
+          min: v => v.length >= 6 || 'Минимум 8 символов', // Min 8 characters
+          emailMatch: () => (`The email and password you entered don't match`),
+        },
         months:{
             0: "января",
             1: "февраля",
@@ -419,11 +549,25 @@ export default {
             4: "В пути",
             5: "Доставлен"
         },
+        statuses2: {
+            "Подтвержден": 1,
+            "Принят в ресторане" : 2,
+            "Готовится": 3,
+            "В пути": 4,
+            "Доставлен" : 5
+        },
+        paymentMethods: {
+            "Оплата картой" : 1,
+            "Оплата наличными" : 2
+        },
         user: {
             name: "Иван Иванов",
             phone_number: "7777777777",
             email: "ivanivanov@gmail.com",
-            password_hash: "12345678"
+            //oldPassword: "",
+            newPassword: "",
+            new2Password: ""
+
         },
         current_orders: [
             {
@@ -437,13 +581,13 @@ export default {
             payment_method: 1,
             items: [
             { 
-            image: "salad3",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
             name: 'Салат с олениной, брусникой и чипсами из топинамбура',
             count: 1,
             price: 1500,
             },
             {
-            image: "snack4",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
             name: 'Паштет из утки',
             price: 900,
             count: 2,
@@ -461,19 +605,19 @@ export default {
             payment_method: 2,
             items: [
             {
-            image: "hot_snack1",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png",
             name: 'Пирожок с томленой говяжей щекой',
             price: 600,
             count: 2,
             },
             {
-            image: "hot_snack2",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
             name: 'Рыбный пирог с соусом из одуванчиков',
             price: 1300,
             count: 1,
             },
             {
-            image: "snack2",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png",
             name: 'Намазки из сибирских рыб',
             price: 2600,
             count: 1,
@@ -490,19 +634,19 @@ export default {
             status_id: 5,
             items: [
             { 
-            image: "salad3",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
             },
             {
-            image: "snack1",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack1.png",
             },
             {
-            image: "hot_snack1",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png",
             },
             {
-            image: "hot_snack2",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
             },
             {
-            image: "hot_snack3",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png",
             },
         ],
             },
@@ -513,28 +657,28 @@ export default {
             status_id: 5,
             items: [
             {
-            image: "snack4",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
             },
             {
-            image: "snack2",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png",
             },
             {
-            image: "salad2",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad2.png",
             },
             {
-            image: "salad1",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad1.png",
             },
             {
-            image: "hot_snack2",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
             },
             {
-            image: "hot_snack3",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png",
             },
             {
-            image: "hot_snack1",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png",
             },
             {
-            image: "salad3",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
             },
         ],
         
@@ -546,16 +690,16 @@ export default {
             status_id: 5,
             items: [
             { 
-            image: "salad1",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad1.png",
             },
             {
-            image: "snack2",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png",
             },
             {
-            image: "hot_snack2",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
             },
             {
-            image: "snack3",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png",
             },
         ],
             },
@@ -564,6 +708,7 @@ export default {
             personal_data: true,
             current_order: false,
             completed_order: false,
+            change_password: false,
             authorised: true,
         
         PaswordRules: { //!!!
@@ -571,26 +716,127 @@ export default {
         //   min: v => v.length >= 8 || 'Min 8 characters',
         //   emailMatch: () => (`The email and password you entered don't match`),
         },
-        EmailRules: { //!!!
-          // required: value => !!value || 'Required.',
-          // min: v => v.length >= 8 || 'Min 8 characters',
-          // emailMatch: () => (`The email and password you entered don't match`),
+        EmailRules: {
+          required: v => !!v || 'Необходимо заполнить', //E-mail is required
+          email: value => {
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return pattern.test(value) || 'Неверный адрес электронной почты' // Invalid e-mail.
+          },
         },
         NameRules: { //!!!
-          // required: value => !!value || 'Required.',
-          // min: v => v.length >= 8 || 'Min 8 characters',
-          // emailMatch: () => (`The email and password you entered don't match`),
+          required: value => !!value || 'Необходимо заполнить', //Name is required
+          min: v => v.length >= 4 || 'Минимум 4 символа', //Min 4 characters
         },
         PhoneRules: { //!!!
-          // required: value => !!value || 'Required.',
-          // min: v => v.length >= 8 || 'Min 8 characters',
-          // emailMatch: () => (`The email and password you entered don't match`),
+          required: value => !!value || 'Необходимо заполнить', //Phone is required
+          phone: value => {
+            // const pattern = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{2})[-. ]?([0-9]{2})$/
+            const pattern = /^([0-9]{10})$/
+            return pattern.test(value) || 'Неверный номер телефона' // 'Invalid phone number'
+          },
         },
         }
         
     },
+    methods: {
+       get_user(){
+        try {
+            axios.get('http://localhost:8080/api/v1/user/{userId}')
+            .then((response) => {
+                let user_data = response.data;
+                this.user.email = user_data.email;
+                this.user.name = user_data.name;
+                this.user.phone_number = user_data.phone_number;
+            })
+            } catch(error) {
+              console.log(error);
+            }
+       },
+       get_current_orders(){
+        try {
+            this.get_statuses();
+            axios.get('http://localhost:8080/api/v1/user/{userId}/orders?status=active')
+            .then((response) => {
+                let orders_data = response.data;
+                this.completed_orders.id = orders_data.orderId;
+                this.completed_orders.status_id = this.statuses2[orders_data.status];
+                this.completed_orders.total_price = orders_data.totalPrice;
+                this.completed_orders.created_at = orders_data.createdAt;
+                // this.current_orders.phone_number = orders_data.phoneNumber;
+                // this.current_orders.address = orders_data.address;
+                // this.current_orders.courier_comment = orders_data.courierComment;
+                // this.current_orders.payment_method = this.paymentMethods[orders_data.paymentMethod];
+                // this.current_orders.items.price = orders_data.items.price;
+                // this.current_orders.items.count = orders_data.items.quantity;
+                // this.current_orders.items.name = orders_data.items.name;
+                this.completed_orders.items = [];
+                for(let item in orders_data.items){
+                    this.completed_orders.items.push(orders_data.items[item]);
+                }
+                // this.completed_orders.items.imageUrl = orders_data.items.imageUrl;
+                //this.current_orders.items.menuItemId = orders_data.items.menuItemId;
+            })
+            } catch(error) {
+              console.log(error);
+            }
+       },
+       get_completed_orders(){
+        try {
+            this.get_statuses();
+            axios.get('http://localhost:8080/api/v1/user/{userId}/orders?status=completed')
+            .then((response) => {
+                let orders_data = response.data;
+                this.current_orders.id = orders_data.orderId;
+                this.current_orders.status_id = this.statuses2[orders_data.status];
+                this.current_orders.total_price = orders_data.totalPrice;
+                this.current_orders.created_at = orders_data.createdAt;
+                this.current_orders.phone_number = orders_data.phoneNumber;
+                this.current_orders.address = orders_data.address;
+                this.current_orders.courier_comment = orders_data.courierComment;
+                this.current_orders.payment_method = this.paymentMethods[orders_data.paymentMethod];
+                this.current_orders.items = [];
+                for(let item in orders_data.items){
+                    this.current_orders.items.push(orders_data.items[item]);
+                }
+                // this.current_orders.items.price = orders_data.items.price;
+                // this.current_orders.items.count = orders_data.items.quantity;
+                // this.current_orders.items.name = orders_data.items.name;
+                // this.current_orders.items.imageUrl = orders_data.items.imageUrl;
+                //this.current_orders.items.menuItemId = orders_data.items.menuItemId;
+            })
+            } catch(error) {
+              console.log(error);
+            }
+       },
+        get_statuses(){
+        try {
+           axios.get('http://localhost:8080/api/v1/order/statuses')
+            .then((response) => {
+                let status_data = response.data;
+                this.statuses = [];
+                for(let item in status_data){
+                    this.statuses.push(item)
+                }
+            })
+            } catch(error) {
+              console.log(error);
+            }
+       },
+    //    change_status(){
+
+    //    }
+       
+    },
+    computed: {
+    passwordConfirmationRule() {
+      return () => (this.user.newPassword === this.user.new2Password) || 'Пароли не совпадают' //'Passwords must match'
+    }
+    },
     
+    props:['userId'],
 }
+    
+
 </script>
 
 <style lang="scss">

@@ -24,7 +24,7 @@
                                         <v-text-field v-model="user.name"
                                             :counter="100"
                                             clearable
-                                            :rules="NameRules"
+                                            :rules="[NameRules.required, NameRules.max]"
                                             label="Полное имя*"
                                             base-color="#D3CDBD"
                                             color="#D3CDBD"                                            
@@ -33,7 +33,7 @@
                                             placeholder="7777777777"
                                             :counter="10"
                                             prefix="+7"
-                                            :rules="PhoneRules"
+                                            :rules="[PhoneRules.required, PhoneRules.phone]"
                                             label="Номер телефона*"
                                             color="#D3CDBD"
                                             base-color="#D3CDBD"
@@ -44,7 +44,7 @@
                                             type="email"
                                             disabled
                                             :counter="100"
-                                            :rules="EmailRules"
+                                            :rules="[EmailRules.required, EmailRules.min, EmailRules.max, EmailRules.email]"
                                             color="#D3CDBD"
                                             base-color="#D3CDBD"
                                             clearable
@@ -66,7 +66,7 @@
                                             :counter="100"
                                             clearable
                                             class="ma-2"
-                                            :rules="StreetRules"
+                                            :rules="[AddressRules.required, AddressRules.street]"
                                             label="Улица*"
                                             color="#D3CDBD"  
                                             base-color="#D3CDBD"                                          
@@ -80,7 +80,7 @@
                                                     <v-text-field v-model="user.address.house"
                                                         placeholder="1"
                                                         :counter="10"
-                                                        :rules="HouseRules"
+                                                        :rules="[AddressRules.required, AddressRules.house]"
                                                         label="Дом*"
                                                         color="#D3CDBD"
                                                         base-color="#D3CDBD"
@@ -95,7 +95,7 @@
                                                         label="Корпус"
                                                         type="number"
                                                         :counter="10"
-                                                        :rules="CorpusRules"
+                                                        :rules="[AddressRules.corpus]"
                                                         color="#D3CDBD"
                                                         base-color="#D3CDBD"
                                                         clearable
@@ -109,7 +109,7 @@
                                                         label="Квартира"
                                                         type="number"
                                                         :counter="10"
-                                                        :rules="FlatRules"
+                                                        :rules="[AddressRules.required, AddressRules.flat]"
                                                         color="#D3CDBD"
                                                         base-color="#D3CDBD"
                                                         clearable
@@ -133,7 +133,7 @@
                                         <v-text-field v-model="user.courier_comment"
                                             :counter="100"
                                             clearable
-                                            :rules="CommentRules"
+                                            :rules="[CommentRules.max]"
                                             label="Написать"
                                             color="#D3CDBD"  
                                             base-color="#D3CDBD"                                          
@@ -172,8 +172,9 @@
                                                 <v-card color="black" >
                                                     <v-row>
                                                         <v-col cols="2">
+                                                            <!-- :src="require('../assets/' + item.imageUrl + '.png')" -->
                                                             <v-img id="item_image" 
-                                                                :src="require('../assets/' + item.image + '.png')"
+                                                                :src="item.imageUrl"
                                                                 />
                                                         </v-col>
                                                         <v-col cols="7">
@@ -302,14 +303,14 @@ export default {
             payment_method: 2,
             items: [
             { 
-            image: "salad3",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
             name: 'Салат с олениной, брусникой и чипсами из топинамбура',
             count: 1,
             price: 1500,
             stock_quantity: 10,
             },
             {
-            image: "snack4",
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
             name: 'Паштет из утки',
             price: 900,
             count: 2,
@@ -317,6 +318,53 @@ export default {
             }
             ],
              },
+
+          
+        EmailRules: { //!!!
+          required: value => !!value || 'Необходимо заполнить', //Required.
+          min: v => v.length >= 8 || 'Минимум 8 символов', //Min 8 characters
+          max: v => v.length <= 100 || 'Не более 100 символов', //Max 100 characters
+          email: value => {
+            const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+            return pattern.test(value) || 'Неверный адрес электронной почты' // Invalid e-mail.
+          },
+        },
+        PhoneRules: { //!!!
+          required: value => !!value || 'Необходимо заполнить', //Phone is required
+          phone: value => {
+            // const pattern = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{2})[-. ]?([0-9]{2})$/
+            const pattern = /^([0-9]{10})$/
+            return pattern.test(value) || 'Неверный номер телефона' // 'Invalid phone number'
+          },
+        },
+        NameRules: { //!!!
+          required: value => !!value || 'Необходимо заполнить', //Required.
+          // min: v => v.length >= 4 || 'Минимум 4 символа', //Min 4 characters
+          max: v => v.length <= 100 || 'Не более 100 символов', //Max 100 characters
+        }, 
+        CommentRules: { //!!!
+          required: value => !!value || 'Необходимо заполнить', //Required.
+          max: v => v.length <= 100 || 'Не более 100 символов', //Max 100 characters
+        },
+        AddressRules: { //!!!
+          required: value => !!value || 'Необходимо заполнить', //Required.
+        //   street: value => {
+        //     const pattern = /^()$/
+        //     return pattern.test(value) || 'Неверное название улицы' // Invalid ...
+        //   },
+        //   house: value => {
+        //     const pattern = /^()$/
+        //     return pattern.test(value) || 'Неверный номер дома' // Invalid ...
+        //   },
+        //   corpus: value => {
+        //     const pattern = /^()$/
+        //     return pattern.test(value) || 'Неверный номер корпуса' // Invalid ...
+        //   },
+        //   flat: value => {
+        //     const pattern = /^()$/
+        //     return pattern.test(value) || 'Неверный номер квартиры' // Invalid ...
+        //   },
+        },
       }
     },
     
