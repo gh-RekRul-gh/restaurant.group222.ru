@@ -132,7 +132,7 @@
       <v-spacer></v-spacer>
       <v-col >
       <div class="d-flex align-center">
-        <v-btn v-if="authorised & $route.path == '/'"
+        <v-btn v-if="authorised() & $route.path == '/'"
           class="cart"
           @click="goToCart()"
           target="_blank"
@@ -145,7 +145,7 @@
           contain
           width="40px"
           src="./assets/shopping cart.svg"/></v-btn>
-        <v-btn v-if="!authorised"
+        <v-btn v-if="!authorised()"
           @click="login_dialog = true"
           class="enter text-none text-subtitle"
           light
@@ -282,7 +282,7 @@
               </form>
               </v-card>
                       <v-btn v-if="authorisation"
-                          @click="login_dialog = false, authorised = true, login()"
+                          @click="login_dialog = false, login()"
                           class=" text-none text-subtitle mx-auto ma-2"
                           light
                           rounded="2"
@@ -478,9 +478,9 @@
       </v-col>
       <v-col>
       <div class="d-flex align-center">
-        <v-btn v-if="authorised & ($route.path == '/cart/' |  $route.path == '/')"
+        <v-btn v-if="authorised() & ($route.path == '/cart/' |  $route.path == '/')"
           class="profile"
-          @click="goToProfile()"
+          @click="goToProfile(), get_user()"
           target="_blank"
           icon
           density="compact" 
@@ -497,7 +497,7 @@
     </v-app-bar>
     
     <v-main class="main">
-      <router-view></router-view>
+      <router-view :userId = this.userId></router-view>
       <!-- <Main v-if="$route.path == '/'"/>
       <Profile v-if="$route.path == '/profile/'"/>
       <ShoppingCart v-if="$route.path == '/cart/'"/> -->
@@ -584,9 +584,11 @@ export default {
         newPasswordSecond: '',
         otp: '', // код для восстановления пароля
         user: {
-            name: "Иван Иванов",
+            name: "",
+            // name: "Иван Иванов",
             support_message: "",
-            email: "ivanivanov@gmail.com",
+            // email: "ivanivanov@gmail.com",
+            email: "",
         },
         loading: false,
         password_recover_dialog: false,
@@ -598,7 +600,7 @@ export default {
         show2:false,
         support_dialog: false,
         login_dialog: false,
-        authorised: false, // true
+        // authorised: authorised(), // true
         PaswordRules: { //!!!
           required: value => {!!value || 'Необходимо заполнить'}, //Required.
           min: v => v.length >= 6 || 'Минимум 6 символов', //Min 6 characters
@@ -627,6 +629,24 @@ export default {
   },
   
   methods: {
+    authorised() {
+       return this.userId != '' & this.userId != null;
+       },
+       get_user(){
+        // let userId = this.userId;
+        console.log(this.userId)
+        try {
+            axios.get(`http://localhost:8080/api/v1/user/${this.userId}`)
+            .then((response) => {
+                let user_data = response.data.data;
+                this.user.email = user_data.email;
+                this.user.name = user_data.name;
+                this.user.phone_number = user_data.phone_number;
+            })
+            } catch(error) {
+              console.log(error);
+            }
+       },
     send_support_message() {
       // let user;
       //       user.push({
@@ -672,8 +692,9 @@ export default {
                 password: this.passwordRegistration,
             })
             .then((response) => {
-                let id = response.data
-                this.userId = id
+                // let id = 
+                console.log(response.data.userId)
+                this.userId = response.data.userId;
             })
             } catch(error) {
               console.log(error);
@@ -691,8 +712,9 @@ export default {
                 password: this.passwordEnter,
             })
             .then((response) => {
-                let id = response.data
-                this.userId = id
+                console.log(response.data.data.userId)
+                // let id = response.data
+                this.userId = response.data.data.userId;
                     // this.$router.push('/login');
             })
             } catch(error) {
@@ -721,19 +743,17 @@ export default {
         }, 2000)
       },
     goToHome() {
-      const userId = this.userId
-      if (userId != null)
-        this.$router.push(`/user/${userId}`)
-      else 
-        this.$router.push(`/user`)
+      this.$router.push(`/`)
     },
     goToProfile() {
       const userId = this.userId
       this.$router.push(`/profile/${userId}`)
+      // this.$router.push(`/profile`)
     },
     goToCart() {
-      const userId = this.userId
-      this.$router.push(`/cart/${userId}`)
+      // const userId = this.userId
+      // this.$router.push(`/cart/${userId}`)
+      this.$router.push(`/cart`)
     },
   },
       computed: {

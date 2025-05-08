@@ -9,24 +9,24 @@
                 <v-row>
                     <v-card-title class="title text-h6 text-md-h5 text-lg-h4">КОРЗИНА</v-card-title>
                 </v-row>
-                <v-row v-if="update_total_price(order) > 0"> 
+                <v-row v-if="update_total_price(cart) > 0"> 
                     <v-col cols="8">
                         <v-card class="mx-auto" max-width="80%" color="black">
                             <v-card-text>
-                                <v-row v-for="item in order.items"
+                                <v-row v-for="item in cart"
                                             :key="item"
                                             md="4">
                                             <v-col>
-                                                <v-card color="black" v-if="item.count > 0">
+                                                <v-card color="black" v-if="item.quantity > 0">
                                                     <v-row>
                                                         <v-col cols="1">
                                                             <v-card class="mt-10" color="black">
                                                                 <div class="d-flex justify-space-around">                                                                        
-                                                                    <v-btn v-if="item.count-1 >= 0"
+                                                                    <v-btn v-if="item.quantity-1 >= 0"
                                                                                 icon 
                                                                                 v-bind="props"
                                                                                 target="_blank"
-                                                                                @click="item.count = 0, delete_cart_item(item.cartItemId)"
+                                                                                @click="item.quantity = 0, delete_cart_item(item.cartItemId)"
                                                                                 > 
                                                                         <v-img color="#D3CDBD" 
                                                                             class="ma-2" 
@@ -45,7 +45,7 @@
                                                             <v-text class="item_title_of_dish_cart" >{{item.name}}</v-text>
                                                         </v-col>
                                                         <v-col cols="2"> 
-                                                            <v-btn v-if="item.count >= 0"
+                                                            <v-btn v-if="item.quantity >= 0"
                                                                     rounded="xl"
                                                                     class="plus_minus_outline text-none text-subtitle"
                                                                     variant="flat"  
@@ -53,31 +53,32 @@
                                                                     size="small"
                                                                     density="compact"
                                                                     >
-                                                                    <v-btn v-if="item.count-1 >= 0"
+                                                                    <v-btn v-if="item.quantity-1 > 0"
                                                                         icon 
                                                                         target="_blank"
-                                                                        @click="item.count--"
+                                                                        @click="item.quantity--"
                                                                         >
                                                                         <v-img color="#D3CDBD" 
                                                                                class="ma-2" 
                                                                                src="../assets/minus_outline.svg"/>
                                                                     </v-btn>
-                                                                    <v-btn v-if="item.count-1 < 0"
+                                                                    <v-btn v-if="item.quantity-1 == 0"
                                                                         icon 
                                                                         target="_blank"
-                                                                        disabled
-                                                                        @click="item.add=!item.add"
-                                                                        >
                                                                         
-                                                                    <span color="#D3CDBD">-</span>
+                                                                        @click="delete_cart_item(item.cartItemId)"
+                                                                        >
+                                                                        <v-img color="#D3CDBD" 
+                                                                               class="ma-2" 
+                                                                               src="../assets/minus_outline.svg"/>
                                                                     </v-btn>
                                                                     <v-text class="item_title_of_dish_cart" color="#D3CDBD" >
-                                                                    {{item.count}}
+                                                                    {{item.quantity}}
                                                                     </v-text>
-                                                                    <v-btn v-if="item.count >= 0 & item.count < item.stock_quantity"
+                                                                    <v-btn v-if="item.quantity >= 0 & item.quantity < stock_quantity"
                                                                         icon 
                                                                         target="_blank"
-                                                                        @click="item.count++"
+                                                                        @click="item.quantity++"
                                                                         >
                                                                     <template>
                                                                     <v-img color="#D3CDBD"
@@ -85,7 +86,7 @@
                                                                                src="../assets/plus_outline.svg"/>
                                                                     </template>
                                                                     </v-btn>
-                                                                    <v-btn v-if="item.count >= item.stock_quantity"
+                                                                    <v-btn v-if="item.quantity >= stock_quantity"
                                                                         icon 
                                                                         disabled
                                                                         target="_blank"
@@ -104,7 +105,7 @@
                                                             </v-row>
                                                             <v-row>
                                                             <v-col>
-                                                            <v-text class="item_total_price_cart">{{item.count * item.price}} ₽</v-text>
+                                                            <v-text class="item_total_price_cart">{{item.quantity * item.price}} ₽</v-text>
                                                              </v-col>
                                                             </v-row>
                                                         </v-col>
@@ -127,7 +128,7 @@
                                             <v-text class="order_title">Товары в заказе</v-text>
                                         </v-col>
                                         <v-col cols="3">
-                                            <v-text class="order_title">{{update_total_price(order)}} ₽</v-text>
+                                            <v-text class="order_title">{{update_total_price(cart)}} ₽</v-text>
                                         </v-col>
                                     </v-row>
                                 <v-row>
@@ -146,7 +147,7 @@
                                             <v-text class="order_title bold">Итого</v-text>
                                         </v-col>
                                         <v-col cols="3">
-                                            <v-text class="order_title">{{update_total_price(order) + delivery_price}} ₽</v-text>
+                                            <v-text class="order_title">{{update_total_price(cart) + delivery_price}} ₽</v-text>
                                         </v-col>
                                     </v-row>
                                     <v-row>
@@ -169,7 +170,7 @@
                         </v-card>
                     </v-col>
                 </v-row>
-                <v-row v-if="update_total_price(order) == 0">   
+                <v-row v-if="update_total_price(cart) == 0 || cart.length == 0">   
                      <v-card class="mx-auto" max-width="80%" color="black">   
                         <v-row><br><br><br><br></v-row>
                         <v-row>
@@ -496,6 +497,7 @@ export default {
     
     data () {
       return {
+        stock_quantity: 20,
         user: {
             name: "Иван Иванов",
             phone_number: "7777777777",
@@ -509,55 +511,53 @@ export default {
             courier_comment: "",
             payment_method: "1",
         },
-        update_total_price(order){
-                let total_price_of_order = 0;
-                for (let x of order.items) {
-                    total_price_of_order += x.price * x.count;
-                }
-                return total_price_of_order;
-                },
+        
                 delivery_price: 500,
-        order: 
-             {
-            id: 5,
-            created_at: new Date(2025, 0, 17, 19, 5, 0, 0),
-            status_id: 1,
-            phone_number: "7777777777",
-            address: "Студенческая улица, 33к3",
-            courier_comment: "",
-            payment_method: 2,
-            items: [
-            { 
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
-            name: 'Салат с олениной, брусникой и чипсами из топинамбура',
-            count: 1,
-            price: 1500,
-            stock_quantity: 10,
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
-            name: 'Паштет из утки',
-            price: 900,
-            count: 2,
-            stock_quantity: 14,
-            }
-            ],
-             },
-            cart: {
-                cartItemId: 1,
-                quantity: 5,
-                menuItemId: 1,
-                name: "Салат с олениной, брусникой и чипсами из топинамбура",
-                price: 1500,
-                imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png"
-            },
+        // cart: [],
+            // order  {
+            // id: 5,
+            // created_at: new Date(2025, 0, 17, 19, 5, 0, 0),
+            // status_id: 1,
+            // phone_number: "7777777777",
+            // address: "Студенческая улица, 33к3",
+            // courier_comment: "",
+            // payment_method: 2,
+            // items: [
+            // { 
+            // imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
+            // name: 'Салат с олениной, брусникой и чипсами из топинамбура',
+            // count: 1,
+            // price: 1500,
+            // stock_quantity: 10,
+            // },
+            // {
+            // imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
+            // name: 'Паштет из утки',
+            // price: 900,
+            // count: 2,
+            // stock_quantity: 14,
+            // }
+            // ],
+            //  },
+        //  order: {},
+            cart: [],
       }
     },
     
     methods: {
+        update_total_price(order){
+                let total_price_of_order = 0;
+                for (let x of order) {
+                    total_price_of_order += x.price * x.quantity;
+                }
+                console.log(total_price_of_order, this.cart.length)
+                return total_price_of_order;
+                },
         delete_cart_item(item_id){
             try {
-           axios.delete('http://localhost:8080/api/v1/cart/items/', item_id)
+              axios.delete(`http://localhost:8080/api/v1/cart/items/${item_id}`, {
+                userId: this.userId
+                })
             
             } catch(error) {
               console.log(error);
@@ -565,9 +565,13 @@ export default {
         },
         get_cart(){
             try {
-            axios.get('http://localhost:8080/api/v1/user/1/cart', this.userId)
+            axios.get(`http://localhost:8080/api/v1/user/${this.userId}/cart`)
             .then((response) => {
-                this.cart = response.data
+                let cartData = response.data;
+                this.cart = [];
+                for(let i = 0; i < cartData.data.length; i += 1){
+                    this.cart.push(cartData.data[i])
+                }
                 // let allItems = response.data
                 // this.cart = []
                 // for(let item in allItems){
@@ -575,7 +579,7 @@ export default {
                 // }
                 // this.id = id
                     // this.$router.push('/login');
-            })
+            }) // aleshabulanov@mail.ru
             } catch(error) {
               console.log(error);
             }
@@ -589,13 +593,13 @@ export default {
     },
     mounted(){
         this.get_cart();
-        setInterval(() => this.get_cart(), 500); //?????
+        // setInterval(() => this.get_cart(), 500000); //?????
     },
-    watch:{
-        $route(){
-            this.get_cart()
-        }
-    },
+    // watch:{
+    //     $route(){
+    //         this.get_cart()
+    //     }
+    // },
     props: ['userId']
 };
 

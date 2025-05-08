@@ -104,6 +104,7 @@
                           <span color="#D3CDBD">+</span>
                         </template>
                         </v-btn>
+                        <!-- <v-btn v-if="items_count[item.menuItemId] >= stock_quantity" -->
                         <v-btn v-if="item.count >= stock_quantity"
                                icon 
                                disabled
@@ -115,9 +116,8 @@
                         </v-btn>
                         </v-btn>                   
                          <!-- v-if="authorised" -->
-                    <v-btn v-if="item.count >= 0 & !authorised()"
+                    <v-btn v-if="!authorised()"
                         rounded="l"
-                        @click="add_item_to_cart(item.menuItemId, item.count)"
                         class="add text-none text-subtitle ma-2"
                         outlined
                         v-bind="props"
@@ -178,9 +178,10 @@
                             </v-card>
                           </v-card>
                       </v-dialog> -->
+                      <!-- <v-btn v-if="items_count[item.menuItemId] >= 0 & authorised()" -->
                       <v-btn v-if="item.count > 0 & authorised()"
                         rounded="xl"
-                        @click="item.add=!item.add"
+                        @click="item.add =!item.add, add_item_to_cart(item.menuItemId, item.count)"
                         class="add text-none text-subtitle"
                         outlined
                         target="_blank"
@@ -189,9 +190,11 @@
                         size="small"
                         density="compact"
                       >Добавить</v-btn>
+                      <!-- @click="items_add[item.menuItemId]=!items_add[item.menuItemId], add_item_to_cart(item.menuItemId, items_count[item.menuItemId])" -->
+
                        <v-btn v-if="item.count == 0 & authorised()"
                         rounded="xl"
-                        @click="item.count++"
+                        @click="item.count++, add_item_to_cart(item.menuItemId, item.count)"
                         class="add text-none text-subtitle ma-2"
                         outlined
                         target="_blank"
@@ -243,129 +246,134 @@ import axios from 'axios';
         tab: null,
         currentItem: 0,
         stock_quantity: 20,
-        tabs_items: [
-          {categoryId: 0, name: 'Все'}, 
-          {categoryId: 1, name: 'Салаты'}, 
-          {categoryId: 2, name: 'Закуски'}, 
-          {categoryId: 3, name: 'Горячие закуски'}, 
-          {categoryId: 4, name: 'Супы'}, 
-          {categoryId: 5, name: 'Лапша и рис'}, 
-          {categoryId: 6, name: 'Сашими'}, 
-          {categoryId: 7, name: 'Роллы'}, 
-          {categoryId: 8, name: 'Блюда на гриле'}, 
-          {categoryId: 9, name: 'Горячие блюда'}, 
-          {categoryId: 10, name: 'Десерты'}, 
-          {categoryId: 11, name: 'Напитки'}
-        ],
-        items: [
-          {
-          menuItemId: 10,
-          isActive: false,
-          categoryId: 3,
-          imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png",
-          name: 'Пирожок с томленой говяжей щекой',
-          description: '',
-          price: 600,
-          count: 0,
-          add: true,
-        },
-        {
-          menuItemId: 9,
-          categoryId: 3,
-          imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
-          name: 'Рыбный пирог с соусом из одуванчиков',
-          description: '',
-          price: 1300,
-          count: 0,
-          add: true,
-        },
-        {
-          menuItemId: 8,
-          categoryId: 3,
-          imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png",
-          name: 'Хуужууры',
-          description: '',
-          price: 700,
-          count: 0,
-          add: true,
-        },
-         {
-          menuItemId: 2,
-          categoryId: 1,
-          imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad1.png",
-          name: 'Зеленый салат с хвойными побегами',
-          description: '',
-          price: 1000,
-          count: 0,
-          add: true,
-        },
-        {
-          menuItemId: 3,
-          categoryId: 1,
-          imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad2.png",
-          name: 'Винегрет с мороженым из печеной капусты',
-          description: '',
-          price: 900,
-          count: 0,
-          add: true,
-        },
-        {
-          menuItemId: 1,
-          categoryId: 1,
-          imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
-          name: 'Салат с олениной, брусникой и чипсами из топинамбура',
-          description: '',
-          price: 1500,
-          count: 0,
-          add: true,
-        },
-        {
-          menuItemId: 5,
-          categoryId: 2,
-          imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack1.png",
-          name: 'Грузди с луком и сметаной',
-          description: '',
-          price: 900,
-          count: 0,
-          add: true,
-        },
-        {
-          menuItemId: 4,
-          categoryId: 2,
-          imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png",
-          name: 'Намазки из сибирских рыб',
-          description: '',
-          price: 2600,
-          count: 0,
-          add: true,
-        },
-        {
-          menuItemId: 6,
-          categoryId: 2,
-          imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack3.png",
-          name: 'Намазка из печеного сельдерея',
-          description: '',
-          price: 800,
-          count: 0,
-          add: true,
-        },
-        {
-          menuItemId: 7,
-          categoryId: 2,
-          imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
-          name: 'Паштет из утки',
-          description: '',
-          price: 900,
-          count: 0,
-          add: true,
-        },
-        ],
+        // tabs_items: [
+        //   {categoryId: 0, name: 'Все'}, 
+        //   {categoryId: 1, name: 'Салаты'}, 
+        //   {categoryId: 2, name: 'Закуски'}, 
+        //   {categoryId: 3, name: 'Горячие закуски'}, 
+        //   {categoryId: 4, name: 'Супы'}, 
+        //   {categoryId: 5, name: 'Лапша и рис'}, 
+        //   {categoryId: 6, name: 'Сашими'}, 
+        //   {categoryId: 7, name: 'Роллы'}, 
+        //   {categoryId: 8, name: 'Блюда на гриле'}, 
+        //   {categoryId: 9, name: 'Горячие блюда'}, 
+        //   {categoryId: 10, name: 'Десерты'}, 
+        //   {categoryId: 11, name: 'Напитки'}
+        // ],
+        tabs_items: [],
+        // items_count: [],
+        // items_add: [],
+        items: [],
+        // items: [
+        //   {
+        //   menuItemId: 10,
+        //   isActive: false,
+        //   categoryId: 3,
+        //   imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png",
+        //   name: 'Пирожок с томленой говяжей щекой',
+        //   description: '',
+        //   price: 600,
+        //   count: 0,
+        //   add: true,
+        // },
+        // {
+        //   menuItemId: 9,
+        //   categoryId: 3,
+        //   imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
+        //   name: 'Рыбный пирог с соусом из одуванчиков',
+        //   description: '',
+        //   price: 1300,
+        //   count: 0,
+        //   add: true,
+        // },
+        // {
+        //   menuItemId: 8,
+        //   categoryId: 3,
+        //   imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png",
+        //   name: 'Хуужууры',
+        //   description: '',
+        //   price: 700,
+        //   count: 0,
+        //   add: true,
+        // },
+        //  {
+        //   menuItemId: 2,
+        //   categoryId: 1,
+        //   imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad1.png",
+        //   name: 'Зеленый салат с хвойными побегами',
+        //   description: '',
+        //   price: 1000,
+        //   count: 0,
+        //   add: true,
+        // },
+        // {
+        //   menuItemId: 3,
+        //   categoryId: 1,
+        //   imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad2.png",
+        //   name: 'Винегрет с мороженым из печеной капусты',
+        //   description: '',
+        //   price: 900,
+        //   count: 0,
+        //   add: true,
+        // },
+        // {
+        //   menuItemId: 1,
+        //   categoryId: 1,
+        //   imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
+        //   name: 'Салат с олениной, брусникой и чипсами из топинамбура',
+        //   description: '',
+        //   price: 1500,
+        //   count: 0,
+        //   add: true,
+        // },
+        // {
+        //   menuItemId: 5,
+        //   categoryId: 2,
+        //   imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack1.png",
+        //   name: 'Грузди с луком и сметаной',
+        //   description: '',
+        //   price: 900,
+        //   count: 0,
+        //   add: true,
+        // },
+        // {
+        //   menuItemId: 4,
+        //   categoryId: 2,
+        //   imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png",
+        //   name: 'Намазки из сибирских рыб',
+        //   description: '',
+        //   price: 2600,
+        //   count: 0,
+        //   add: true,
+        // },
+        // {
+        //   menuItemId: 6,
+        //   categoryId: 2,
+        //   imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack3.png",
+        //   name: 'Намазка из печеного сельдерея',
+        //   description: '',
+        //   price: 800,
+        //   count: 0,
+        //   add: true,
+        // },
+        // {
+        //   menuItemId: 7,
+        //   categoryId: 2,
+        //   imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
+        //   name: 'Паштет из утки',
+        //   description: '',
+        //   price: 900,
+        //   count: 0,
+        //   add: true,
+        // },
+        // ],
         login_notification_dialog: false,
       }
   },
   methods: {
     authorised() {
-       return this.userId != null;
+      // let userId =  this.$route.params.userId;
+       return !(this.userId == '' || this.userId == null);
        },
     check_empty_category(category){
         for (let x of this.items) {
@@ -381,8 +389,9 @@ import axios from 'axios';
             .then((response) => {
                 let allItems = response.data
                 this.tabs_items = []
-                for(let item in allItems){
-                    this.tabs_items.push(allItems[item])
+                // console.log(allItems)
+                for(let item in allItems.data){
+                    this.tabs_items.push(allItems.data[item])
                 }
                 // this.id = id
                     // this.$router.push('/login');
@@ -395,12 +404,16 @@ import axios from 'axios';
         try {
             axios.get('http://localhost:8080/api/v1/menu')
             .then((response) => {
-                let allItems = response.data
+                let allItems2 = response.data
                 this.items = []
-                for(let item in allItems){
-                    item.push({count: 0, add: true})
-                    this.items.push(allItems[item])
+                // console.log(allItems2) 
+                for(let item in allItems2.data){
+                    this.items.push(Object.assign({}, allItems2.data[item], {count: 0, add: true}))
+                    // console.log(Object.assign({}, allItems2.data[item], {count: 0, add: true}))
+                    // this.items_count[allItems2.data[item].menuItemId] = 0
+                    // this.items_add[allItems2.data[item].menuItemId] = true
                 }
+                console.log(this.userId);
                 // this.id = id
                     // this.$router.push('/login');
             })
@@ -411,8 +424,15 @@ import axios from 'axios';
         add_item_to_cart(id, count){
           // let item_to_cart;
           // item_to_cart.push({menuItemId: id, quantity: count})
+          let userId =  this.userId;
           try {
-            axios.post('http://localhost:8080/api/v1/cart/items', this.userId, {menuItemId: id, quantity: count})
+            axios.post('http://localhost:8080/api/v1/cart/items', {
+              userId: userId, 
+              items: [{
+                menuItemId: id, 
+                quantity: count
+                }]
+              })
             // .then((response) => {})
             } catch(error) {
               console.log(error);
@@ -422,8 +442,8 @@ import axios from 'axios';
   mounted(){
         this.get_menu();
         this.get_categories();
-        setInterval(() => this.get_menu(), 50000);
-        setInterval(() => this.get_categories(), 50000); //???????
+        // setInterval(() => this.get_menu(), 40000);
+        // setInterval(() => this.get_categories(), 50000); //???????
   },
   watch:{
     $route(){

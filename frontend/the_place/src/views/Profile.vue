@@ -561,149 +561,154 @@ export default {
             "Оплата наличными" : 2
         },
         user: {
-            name: "Иван Иванов",
-            phone_number: "7777777777",
-            email: "ivanivanov@gmail.com",
+            // name: "Иван Иванов",
+            name: "",
+            // phone_number: "7777777777",
+            phone_number: "",
+            // email: "ivanivanov@gmail.com",
+            email: "",
             //oldPassword: "",
             newPassword: "",
             new2Password: ""
 
         },
-        current_orders: [
-            {
-            id: 1,
-            total_price: 3800,
-            created_at: new Date(2025, 0, 17, 19, 5, 0, 0),
-            status_id: 1,
-            phone_number: "7777777777",
-            address: "Студенческая улица, 33к3",
-            courier_comment: "",
-            payment_method: 1,
-            items: [
-            { 
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
-            name: 'Салат с олениной, брусникой и чипсами из топинамбура',
-            count: 1,
-            price: 1500,
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
-            name: 'Паштет из утки',
-            price: 900,
-            count: 2,
-            },
-        ],
-            },
-            {
-            id: 2,
-            total_price: 5600,
-            created_at: new Date(2025, 1, 13, 12, 8, 0, 0),
-            status_id: 3,
-            phone_number: "7777777777",
-            address: "Студенческая улица, 33к3",
-            courier_comment: "",
-            payment_method: 2,
-            items: [
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png",
-            name: 'Пирожок с томленой говяжей щекой',
-            price: 600,
-            count: 2,
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
-            name: 'Рыбный пирог с соусом из одуванчиков',
-            price: 1300,
-            count: 1,
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png",
-            name: 'Намазки из сибирских рыб',
-            price: 2600,
-            count: 1,
-            },
-        ],
+        current_orders: [],
+        completed_orders: [],
+        // current_orders: [
+        //     {
+        //     id: 1,
+        //     total_price: 3800,
+        //     created_at: new Date(2025, 0, 17, 19, 5, 0, 0),
+        //     status_id: 1,
+        //     phone_number: "7777777777",
+        //     address: "Студенческая улица, 33к3",
+        //     courier_comment: "",
+        //     payment_method: 1,
+        //     items: [
+        //     { 
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
+        //     name: 'Салат с олениной, брусникой и чипсами из топинамбура',
+        //     count: 1,
+        //     price: 1500,
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
+        //     name: 'Паштет из утки',
+        //     price: 900,
+        //     count: 2,
+        //     },
+        // ],
+        //     },
+        //     {
+        //     id: 2,
+        //     total_price: 5600,
+        //     created_at: new Date(2025, 1, 13, 12, 8, 0, 0),
+        //     status_id: 3,
+        //     phone_number: "7777777777",
+        //     address: "Студенческая улица, 33к3",
+        //     courier_comment: "",
+        //     payment_method: 2,
+        //     items: [
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png",
+        //     name: 'Пирожок с томленой говяжей щекой',
+        //     price: 600,
+        //     count: 2,
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
+        //     name: 'Рыбный пирог с соусом из одуванчиков',
+        //     price: 1300,
+        //     count: 1,
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png",
+        //     name: 'Намазки из сибирских рыб',
+        //     price: 2600,
+        //     count: 1,
+        //     },
+        // ],
         
-            },
-        ],
-        completed_orders: [
-            {
-            id: 3,
-            total_price: 10765,
-            created_at: new Date(2025, 0, 17, 19, 5, 0, 0),
-            status_id: 5,
-            items: [
-            { 
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack1.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png",
-            },
-        ],
-            },
-            {
-            id: 4,
-            total_price: 15600,
-            created_at: new Date(2025, 1, 13, 12, 8, 0, 0),
-            status_id: 5,
-            items: [
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad2.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad1.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
-            },
-        ],
+        //     },
+        // ],
+        // completed_orders: [
+        //     {
+        //     id: 3,
+        //     total_price: 10765,
+        //     created_at: new Date(2025, 0, 17, 19, 5, 0, 0),
+        //     status_id: 5,
+        //     items: [
+        //     { 
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack1.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png",
+        //     },
+        // ],
+        //     },
+        //     {
+        //     id: 4,
+        //     total_price: 15600,
+        //     created_at: new Date(2025, 1, 13, 12, 8, 0, 0),
+        //     status_id: 5,
+        //     items: [
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad2.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad1.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack1.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
+        //     },
+        // ],
         
-            },
-            {
-            id: 5,
-            total_price: 7800,
-            created_at: new Date(2025, 2, 13, 14, 19, 0, 0),
-            status_id: 5,
-            items: [
-            { 
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad1.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png",
-            },
-        ],
-            },
-        ],
+        //     },
+        //     {
+        //     id: 5,
+        //     total_price: 7800,
+        //     created_at: new Date(2025, 2, 13, 14, 19, 0, 0),
+        //     status_id: 5,
+        //     items: [
+        //     { 
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad1.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack2.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack2.png",
+        //     },
+        //     {
+        //     imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/hot_snack3.png",
+        //     },
+        // ],
+        //     },
+        // ],
         
             personal_data: true,
             current_order: false,
@@ -740,10 +745,12 @@ export default {
     },
     methods: {
        get_user(){
+        // let userId =  this.$route.params.userId;
+        // console.log(userId)
         try {
-            axios.get('http://localhost:8080/api/v1/user/{userId}')
+            axios.get(`http://localhost:8080/api/v1/user/${this.userId}`)
             .then((response) => {
-                let user_data = response.data;
+                let user_data = response.data.data;
                 this.user.email = user_data.email;
                 this.user.name = user_data.name;
                 this.user.phone_number = user_data.phone_number;
@@ -754,10 +761,11 @@ export default {
        },
        get_current_orders(){
         try {
+            // let userId =  this.$route.params.userId;
             this.get_statuses();
-            axios.get('http://localhost:8080/api/v1/user/{userId}/orders?status=active')
+            axios.get(`http://localhost:8080/api/v1/user/${this.userId}/orders?status=active`)
             .then((response) => {
-                let orders_data = response.data;
+                let orders_data = response.data.data;
                 this.completed_orders.id = orders_data.orderId;
                 this.completed_orders.status_id = this.statuses2[orders_data.status];
                 this.completed_orders.total_price = orders_data.totalPrice;
@@ -782,10 +790,11 @@ export default {
        },
        get_completed_orders(){
         try {
+            // let userId =  this.$route.params.userId;
             this.get_statuses();
-            axios.get('http://localhost:8080/api/v1/user/{userId}/orders?status=completed')
+            axios.get(`http://localhost:8080/api/v1/user/${this.userId}/orders?status=completed`)
             .then((response) => {
-                let orders_data = response.data;
+                let orders_data = response.data.data;
                 this.current_orders.id = orders_data.orderId;
                 this.current_orders.status_id = this.statuses2[orders_data.status];
                 this.current_orders.total_price = orders_data.totalPrice;
@@ -812,10 +821,10 @@ export default {
         try {
            axios.get('http://localhost:8080/api/v1/order/statuses')
             .then((response) => {
-                let status_data = response.data;
+                let status_data = response.data.data;
                 this.statuses = [];
                 for(let item in status_data){
-                    this.statuses.push(item)
+                    this.statuses.push(status_data[item])
                 }
             })
             } catch(error) {

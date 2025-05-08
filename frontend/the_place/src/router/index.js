@@ -17,17 +17,17 @@ const routes = [
     component: Main
   },
   {
-    path: '/profile',
+    path: '/profile/:userId',
     name: 'profile',
     component: Profile
   },
   {
-    path: '/cart',
+    path: '/cart/',
     name: 'cart',
     component: ShoppingCart,
   },
   {
-    path: '/formation',
+    path: '/formation/',
     name: 'formation',
     component: OrderFormation
     },

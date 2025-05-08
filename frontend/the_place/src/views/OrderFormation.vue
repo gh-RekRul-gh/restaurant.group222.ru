@@ -181,7 +181,7 @@
                                                             <v-text class="item_title_of_dish" >{{item.name}}</v-text>
                                                         </v-col>
                                                         <v-col cols="1"> 
-                                                            <v-text class="order_title">{{item.count}}</v-text>
+                                                            <v-text class="order_title">{{item.quantity}}</v-text>
                                                         </v-col>
                                                         <v-col cols="2">
                                                             <v-row>
@@ -191,7 +191,7 @@
                                                             </v-row>
                                                             <v-row>
                                                             <v-col>
-                                                            <v-text class="order_title">{{item.count * item.price}} ₽</v-text>
+                                                            <v-text class="order_title">{{item.quantity * item.price}} ₽</v-text>
                                                              </v-col>
                                                             </v-row>
                                                         </v-col>
@@ -239,7 +239,7 @@
                                     <v-row>
                                         <v-col>
                                         <v-btn
-                                            @click="goToPlacedOrder()"
+                                            @click="goToPlacedOrder(), make_order()"
                                             class=" text-none text-subtitle"
                                             light
                                             rounded="2"
@@ -264,59 +264,44 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 
 export default {    
     name: 'OrderFormation_',
     
-    data () {
+    data () {//aleshabulanov@mail.ru
       return {
+        
         user: {
-            name: "Иван Иванов",
-            phone_number: "7777777777",
-            email: "ivanivanov@gmail.com",
+            name: "", //Иван Иванов
+            phone_number: "", //7777777777
+            email: "", //ivanivanov@gmail.com
             address: {
-                street: "Студенческая улица",
-                house: 33,
-                corpus: 3,
+                street: "", // Студенческая улица
+                house: "", //33
+                corpus: "", //3
                 flat: '',
             },
             courier_comment: "",
-            payment_method: "1",
+            payment_method: "", // 1
+        },
+         paymentMethods: {
+             1 : "Оплата картой",
+             2: "Оплата наличными"
         },
         update_total_price(order){
                 let total_price_of_order = 0;
                 for (let x of order.items) {
-                    total_price_of_order += x.price * x.count;
+                    total_price_of_order += x.price * x.quantity;
                 }
                 return total_price_of_order;
                 },
                 delivery_price: 500,
         order: 
              {
-            id: 5,
-            created_at: new Date(2025, 0, 17, 19, 5, 0, 0),
-            status_id: 1,
-            phone_number: "7777777777",
-            address: "Студенческая улица, 33к3",
             courier_comment: "",
-            payment_method: 2,
-            items: [
-            { 
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
-            name: 'Салат с олениной, брусникой и чипсами из топинамбура',
-            count: 1,
-            price: 1500,
-            stock_quantity: 10,
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
-            name: 'Паштет из утки',
-            price: 900,
-            count: 2,
-            stock_quantity: 14,
-            }
-            ],
+            payment_method: '', 
+            items: [ ],
              },
 
           
@@ -375,6 +360,73 @@ export default {
         goToHome() {
             this.$router.push('/')
         },
-    }
+        get_addr(){
+            let addr;
+            console.log('+7' + this.user.phone_number)
+            for (let i in this.user.address)
+                addr += i
+            return addr
+        },
+        get_user(){
+        // let userId =  this.$route.params.userId;
+        // console.log(userId)
+        try {
+            axios.get(`http://localhost:8080/api/v1/user/${this.userId}`)
+            .then((response) => {
+                let user_data = response.data.data;
+                this.user.email = user_data.email;
+                this.user.name = user_data.name;
+                this.user.phone_number = user_data.phone_number;
+            })
+            } catch(error) {
+              console.log(error);
+            }
+       },
+        make_order(){
+            try {
+            axios.post(`http://localhost:8080/api/v1/order`, {
+                 userId: this.userId,
+                 totalPrice: this.update_total_price(this.order) + 500,
+                 phoneNumber: '+7' + this.user.phone_number,
+                 address: this.get_addr(),
+                 courierComment: this.user.courier_comment,
+                 paymentMethod: this.paymentMethods[this.user.payment_method]
+            })
+            .then((response) => {
+                let cartData = response.data;
+                this.cart = [];
+                for(let i = 0; i < cartData.data.length; i += 1){
+                    this.cart.push(cartData.data[i])
+                }
+            }) 
+            } catch(error) {
+              console.log(error);
+            }
+        },
+
+        get_cart(){
+            try {
+            axios.get(`http://localhost:8080/api/v1/user/${this.userId}/cart`)
+            .then((response) => {
+                let cartData = response.data;
+                this.order.items = [];
+                for(let i = 0; i < cartData.data.length; i += 1){
+                    this.order.items.push(cartData.data[i])
+                }
+            }) 
+            } catch(error) {
+              console.log(error);
+            }
+        },
+    },
+    mounted(){
+        this.get_cart();
+        this.get_user();
+        this.get_addr();
+        // setInterval(() => this.get_cart(), 500000); //?????
+    },
+     props: ['userId']
 };
+
 </script>
+
