@@ -56,7 +56,7 @@
                                                                     <v-btn v-if="item.quantity-1 > 0"
                                                                         icon 
                                                                         target="_blank"
-                                                                        @click="item.quantity--"
+                                                                        @click="item.quantity--, add_item_to_cart(item.menuItemId, -1)"
                                                                         >
                                                                         <v-img color="#D3CDBD" 
                                                                                class="ma-2" 
@@ -78,7 +78,7 @@
                                                                     <v-btn v-if="item.quantity >= 0 & item.quantity < stock_quantity"
                                                                         icon 
                                                                         target="_blank"
-                                                                        @click="item.quantity++"
+                                                                        @click="item.quantity++, add_item_to_cart(item.menuItemId, 1)"
                                                                         >
                                                                     <template>
                                                                     <v-img color="#D3CDBD"
@@ -550,14 +550,31 @@ export default {
                 for (let x of order) {
                     total_price_of_order += x.price * x.quantity;
                 }
-                console.log(total_price_of_order, this.cart.length)
                 return total_price_of_order;
                 },
+        add_item_to_cart(id, count){
+          // let item_to_cart;
+          // item_to_cart.push({menuItemId: id, quantity: count})
+          let userId =  this.userId;
+          try {
+            axios.post('http://localhost:8080/api/v1/cart/items', {
+              userId: userId, 
+              items: [{
+                menuItemId: id, 
+                quantity: count
+                }]
+              })
+            // .then((response) => {})
+            } catch(error) {
+              console.log(error);
+            }
+        },
         delete_cart_item(item_id){
             try {
-              axios.delete(`http://localhost:8080/api/v1/cart/items/${item_id}`, {
+            console.log(this.userId)
+              axios( {method: 'delete', url: 'http://localhost:8080/api/v1/cart/items/' + item_id, data: {
                 userId: this.userId
-                })
+            }})
             
             } catch(error) {
               console.log(error);

@@ -9,7 +9,8 @@
                 <v-row>
                 <v-card class="mx-auto" max-width="80%" color="black">
                     <br><br>
-                    <v-card-title class="title_order_placement text-h6 text-md-h5 text-lg-h4">Ваш заказ №{{order.id}} успешно оформлен!</v-card-title>   
+                    <v-card-title class="title_order_placement text-h6 text-md-h5 text-lg-h4">Ваш заказ успешно оформлен!</v-card-title>  
+                     <!--№{{order.id}}  -->
                     <v-card-text>
                         <br>
                             <v-row>
@@ -63,46 +64,37 @@
 </template>
 
 <script>
-
+// import axios from 'axios';
 
 export default {    
+    
     name: 'PlacedOrder_',
     
     data () {
       return {
+        paymentMethods: {
+             1 : "Оплата картой",
+             2: "Оплата наличными"
+        },
         order: 
              {
-            id: 5,
-            created_at: new Date(2025, 0, 17, 19, 5, 0, 0),
-            status_id: 1,
-            phone_number: "7777777777",
-            address: "Студенческая улица, 33к3",
+            created_at: "", //new Date(2025, 0, 17, 19, 5, 0, 0)
+            status_id: "", //1
+            phone_number: "", // 7777777777
+            address: "", //Студенческая улица, 33к3
             courier_comment: "",
-            payment_method: 2,
-            items: [
-            { 
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
-            name: 'Салат с олениной, брусникой и чипсами из топинамбура',
-            count: 1,
-            price: 1500,
-            stock_quantity: 10,
-            },
-            {
-            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/snack4.png",
-            name: 'Паштет из утки',
-            price: 900,
-            count: 2,
-            stock_quantity: 14,
-            }
-            ],
+            payment_method: '', // 2
+            items: [ ],
              },
       }
     },
     
     methods: {
+        
         goToHome() {
             this.$router.push('/')
         },
-    }
+    },
+    props: ['userId']
 };
 </script>

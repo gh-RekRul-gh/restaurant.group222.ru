@@ -50,7 +50,7 @@
                                        class="list_items text-none text-subtitle" 
                                        color="#D3CDBD" 
                                        outlined
-                                       @click="current_order = true, personal_data = false, completed_order = false, change_password = false, get_current_orders()"
+                                       @click="current_order = true, personal_data = false, completed_order = false, change_password = false"
                                        width="100%"
                                        target="_blank"
                                        variant="flat"
@@ -79,7 +79,7 @@
                                        class="list_items text-none text-subtitle" 
                                        color="#D3CDBD" 
                                        outlined
-                                       @click="current_order = false, personal_data = false, completed_order = true, change_password = false, get_completed_orders()"
+                                       @click="current_order = false, personal_data = false, completed_order = true, change_password = false"
                                        width="100%"
                                        target="_blank"
                                        variant="flat"
@@ -157,11 +157,11 @@
                                                   clearable
                                         >
                                     </v-text-field>
+                                    <!--      prefix="+7" -->
                                     <v-text-field v-model="user.phone_number"
                                                   fast-fail
-                                                  placeholder="7777777777"
-                                                  :counter="10"
-                                                  prefix="+7"
+                                                  placeholder="+77777777777"
+                                                  :counter="12"
                                                   :rules="[PhoneRules.required, PhoneRules.phone]"
                                                   label="Номер телефона"
                                                   outlined
@@ -197,7 +197,7 @@
                                         >
                                     </v-text-field> -->
                                     <v-btn x-large class="list_items text-none text-subtitle ma-2" 
-                                        @click="change_password = true"
+                                       @click="change_password = true"
                                        color="#D3CDBD" 
                                        light
                                        width="48%"
@@ -207,6 +207,7 @@
                                         Изменить пароль
                                     </v-btn>
                                     <v-btn x-large class="list_items text-none text-subtitle ma-2" 
+                                       @click="save_info_of_profile()"
                                        color="#D3CDBD" 
                                        light
                                        width="48%"
@@ -300,6 +301,7 @@
                                         </v-col>
                                         <v-col cols="6">
                                     <v-btn x-large class="list_items text-none text-subtitle ma-2" 
+                                       @click="change_password_in_profile()"
                                        color="#D3CDBD" 
                                        light
                                        width="100%"
@@ -322,36 +324,36 @@
                                             md="4">
                                 <v-col>
                                 <v-card outlined  color="black" >
-                                <v-card-title class="order_title">{{"ЗАКАЗ №" + order.id}} 
+                                <v-card-title class="order_title">{{'ЗАКАЗ №' + order.orderId}} 
                                     <v-spacer></v-spacer> 
-                                    {{order.created_at.getDate()+ " " + months[order.created_at.getMonth()] + " " + order.created_at.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}}
+                                    {{new Date(order.createdAt).getDate()+ " " + months[new Date(order.createdAt).getMonth()] + " " + new Date(order.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}}
                                     </v-card-title>
                                     <v-card color="black" >
                                     <v-row>
                                         <v-col cols="3">
                                         </v-col>
                                         <v-col cols="9">
-                                        <v-img v-if="order.status_id == 1"
+                                        <v-img v-if="order.status == statuses[0]"
                                               class="status_image shrink mr-2 ml-2" 
                                              src="../assets/status1.svg"
                                              width="60%"
                                             />
-                                        <v-img v-if="order.status_id == 2"
+                                        <v-img v-if="order.status == statuses[1]"
                                               class="status_image shrink mr-2 ml-2" 
                                              src="../assets/status2.svg"
                                              width="60%"
                                             />
-                                        <v-img v-if="order.status_id == 3"
+                                        <v-img v-if="order.status == statuses[2]"
                                               class="status_image shrink mr-2 ml-2" 
                                              src="../assets/status3.svg"
                                              width="60%"
                                             />
-                                        <v-img v-if="order.status_id == 4"
+                                        <v-img v-if="order.status == statuses[3]"
                                               class="status_image shrink mr-2 ml-2" 
                                              src="../assets/status4.svg"
                                              width="60%"
                                             />
-                                        <v-img v-if="order.status_id == 5"
+                                        <v-img v-if="order.status == statuses[4]"
                                               class="status_image shrink mr-2 ml-2" 
                                              src="../assets/status5.svg"
                                              width="60%"
@@ -385,7 +387,7 @@
                                                             <v-text class="item_title_of_dish" >{{item.name}}</v-text>
                                                         </v-col>
                                                         <v-col cols="1"> 
-                                                            <v-text class="order_title">{{item.count}}</v-text>
+                                                            <v-text class="order_title">{{item.quantity}}</v-text>
                                                         </v-col>
                                                         <v-col cols="2">
                                                             <v-row>
@@ -395,7 +397,7 @@
                                                             </v-row>
                                                             <v-row>
                                                             <v-col>
-                                                            <v-text class="order_title">{{item.count * item.price}} ₽</v-text>
+                                                            <v-text class="order_title">{{item.quantity * item.price}} ₽</v-text>
                                                              </v-col>
                                                             </v-row>
                                                         </v-col>
@@ -418,7 +420,7 @@
                                                     <v-text class="order_title">Товары в заказе</v-text>
                                                 </v-col>
                                                 <v-col cols="3">
-                                                    <v-text class="order_title">{{order.total_price - 500}} ₽</v-text>
+                                                    <v-text class="order_title">{{order.totalPrice - 500}} ₽</v-text>
                                                 </v-col>
                                              </v-row>
                                            <v-row>
@@ -437,7 +439,7 @@
                                                     <v-text class="order_title bold">Итого</v-text>
                                                 </v-col>
                                                 <v-col cols="3">
-                                                    <v-text class="order_title">{{order.total_price}} ₽</v-text>
+                                                    <v-text class="order_title">{{order.totalPrice}} ₽</v-text>
                                                 </v-col>
                                              </v-row>
                                         </v-card-text>
@@ -460,19 +462,19 @@
                                 <v-col>
                                 <v-card outlined color="black" border-radius="20px">
                                 <v-card-title>
-                                    <v-text class="comp_order_title">{{"Заказ №" + comp_order.id}}</v-text>
+                                    <v-text class="comp_order_title">{{'Заказ №' + comp_order.orderId}}</v-text>
                                     <v-spacer></v-spacer> 
-                                     <v-text class="comp_order_title">{{comp_order.total_price}}  ₽</v-text>
+                                     <v-text class="comp_order_title">{{comp_order.totalPrice}}  ₽</v-text>
                                     </v-card-title>
                                     <v-card-subtitle>
                                         <v-row>
                                             <v-col cols="10">
                                                 <v-text class="comp_order_data">
-                                                    {{comp_order.created_at.getDate()+ " " + months[comp_order.created_at.getMonth()] + " " + comp_order.created_at.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}}
+                                                    {{new Date(comp_order.createdAt).getDate()+ " " + months[new Date(comp_order.createdAt).getMonth()] + " " + new Date(comp_order.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}}
                                                 </v-text>
                                                 </v-col>
                                                 <v-col cols="2">
-                                                <v-text class="comp_order_status">{{statuses[comp_order.status_id]}}</v-text>
+                                                <v-text class="comp_order_status">{{comp_order.status}}</v-text>
                                             </v-col>
                                         </v-row>
                                     </v-card-subtitle>
@@ -572,7 +574,26 @@ export default {
             new2Password: ""
 
         },
-        current_orders: [],
+        current_orders: [
+            {
+            orderId: 1,
+            totalPrice: 3800,
+            createdAt: new Date(2025, 0, 17, 19, 5, 0, 0),
+            status: "Подтвержден",
+            phoneNumber: "7777777777",
+            address: "Студенческая улица, 33к3",
+            courierComment: "",
+            paymentMethod: 1,
+            items: [
+            { 
+            imageUrl: "https://storage.yandexcloud.net/restaurant.group222.ru/salad3.png",
+            name: 'Салат с олениной, брусникой и чипсами из топинамбура',
+            quantity: 1,
+            price: 1500,
+            }
+        ],
+        },
+      ],
         completed_orders: [],
         // current_orders: [
         //     {
@@ -736,7 +757,7 @@ export default {
           required: value => !!value || 'Необходимо заполнить', //Phone is required
           phone: value => {
             // const pattern = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{2})[-. ]?([0-9]{2})$/
-            const pattern = /^([0-9]{10})$/
+            const pattern = /^\+7([0-9]{10})$/
             return pattern.test(value) || 'Неверный номер телефона' // 'Invalid phone number'
           },
         },
@@ -753,7 +774,7 @@ export default {
                 let user_data = response.data.data;
                 this.user.email = user_data.email;
                 this.user.name = user_data.name;
-                this.user.phone_number = user_data.phone_number;
+                this.user.phone_number = user_data.phoneNumber;
             })
             } catch(error) {
               console.log(error);
@@ -762,28 +783,18 @@ export default {
        get_current_orders(){
         try {
             // let userId =  this.$route.params.userId;
-            this.get_statuses();
             axios.get(`http://localhost:8080/api/v1/user/${this.userId}/orders?status=active`)
             .then((response) => {
-                let orders_data = response.data.data;
-                this.completed_orders.id = orders_data.orderId;
-                this.completed_orders.status_id = this.statuses2[orders_data.status];
-                this.completed_orders.total_price = orders_data.totalPrice;
-                this.completed_orders.created_at = orders_data.createdAt;
-                // this.current_orders.phone_number = orders_data.phoneNumber;
-                // this.current_orders.address = orders_data.address;
-                // this.current_orders.courier_comment = orders_data.courierComment;
-                // this.current_orders.payment_method = this.paymentMethods[orders_data.paymentMethod];
-                // this.current_orders.items.price = orders_data.items.price;
-                // this.current_orders.items.count = orders_data.items.quantity;
-                // this.current_orders.items.name = orders_data.items.name;
-                this.completed_orders.items = [];
-                for(let item in orders_data.items){
-                    this.completed_orders.items.push(orders_data.items[item]);
-                }
-                // this.completed_orders.items.imageUrl = orders_data.items.imageUrl;
-                //this.current_orders.items.menuItemId = orders_data.items.menuItemId;
-            })
+                let orders_data = response.data;
+                this.current_orders = []
+                 for(let i = 0; i < orders_data.data.length; i += 1){
+                    this.current_orders.push(orders_data.data[i])
+                 }
+                 for (let i in this.current_orders){
+                    console.log(this.current_orders[i].orderId);
+                    // console.log(this.current_orders[i].orderId);
+                 }
+              })
             } catch(error) {
               console.log(error);
             }
@@ -794,24 +805,13 @@ export default {
             this.get_statuses();
             axios.get(`http://localhost:8080/api/v1/user/${this.userId}/orders?status=completed`)
             .then((response) => {
-                let orders_data = response.data.data;
-                this.current_orders.id = orders_data.orderId;
-                this.current_orders.status_id = this.statuses2[orders_data.status];
-                this.current_orders.total_price = orders_data.totalPrice;
-                this.current_orders.created_at = orders_data.createdAt;
-                this.current_orders.phone_number = orders_data.phoneNumber;
-                this.current_orders.address = orders_data.address;
-                this.current_orders.courier_comment = orders_data.courierComment;
-                this.current_orders.payment_method = this.paymentMethods[orders_data.paymentMethod];
-                this.current_orders.items = [];
-                for(let item in orders_data.items){
-                    this.current_orders.items.push(orders_data.items[item]);
-                }
-                // this.current_orders.items.price = orders_data.items.price;
-                // this.current_orders.items.count = orders_data.items.quantity;
-                // this.current_orders.items.name = orders_data.items.name;
-                // this.current_orders.items.imageUrl = orders_data.items.imageUrl;
-                //this.current_orders.items.menuItemId = orders_data.items.menuItemId;
+                let orders_data = response.data;
+                this.completed_orders = []
+                 for(let i = 0; i < orders_data.data.length; i += 1){
+                    this.completed_orders.push(orders_data.data[i])
+                 }
+                 console.log(this.completed_orders);
+            
             })
             } catch(error) {
               console.log(error);
@@ -831,6 +831,29 @@ export default {
               console.log(error);
             }
        },
+        save_info_of_profile(){
+        try {
+           axios.patch('http://localhost:8080/api/v1/user/edit', {
+                userId: this.userId,
+                name: this.user.name,
+                phoneNumber: this.user.phone_number
+           })
+           this.get_user();
+            } catch(error) {
+              console.log(error);
+            }
+       },
+        change_password_in_profile(){
+        try {
+        if(this.user.newPassword === this.user.new2Password){
+           axios.patch('http://localhost:8080/api/v1/user/edit/password', {
+                userId: this.userId,
+                password: this.user.newPassword
+           })}
+            } catch(error) {
+              console.log(error);
+            }
+        },
     //    change_status(){
 
     //    }
@@ -841,7 +864,13 @@ export default {
       return () => (this.user.newPassword === this.user.new2Password) || 'Пароли не совпадают' //'Passwords must match'
     }
     },
-    
+    mounted(){
+        this.get_statuses();
+        this.get_current_orders();
+        // this.get_completed_orders();
+        this.get_user();
+        // setInterval(() => this.get_cart(), 500000); //?????
+    },
     props:['userId'],
 }
     

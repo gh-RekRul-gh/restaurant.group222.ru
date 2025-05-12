@@ -21,7 +21,93 @@
           color="#D3CDBD"
           width="40px"
         src="./assets/home5.svg"/></v-btn>
-        <v-btn v-if="$route.path == '/' "
+        <v-btn v-if="$route.path == '/' & authorised()"
+          @click="support_dialog = true, get_user()"
+          target="_blank"
+          icon
+          density="compact" 
+        >
+        <img
+          alt="customer-care"
+          class="shrink mr-2 ml-2"
+          contain
+          width="40px"
+          src="./assets/customer-care.svg"/></v-btn>
+        <v-dialog 
+          v-model="support_dialog2"
+          width="auto"
+        >
+          <v-card 
+            color="black"
+            dark
+            width="500"
+          ><v-card color="black" width="100%" height="100%" class="card_support">
+            <v-card-item dark>
+          <v-btn width="89%" large text class="title_support text-none text-subtitle text-h6 text-md-h5 text-lg-h4 ml-5" color="#D3CDBD">Свяжитесь с нами</v-btn>
+          <v-btn
+              @click="support_dialog = false"
+              class=" text-none text-subtitle mx-auto ma-2"
+              light
+              rounded="2"
+              icon
+              target="_blank"
+              variant="flat"
+              color="#D3CDBD"
+              small
+              density="compact"
+            ><v-img color="#D3CDBD" 
+                  class="ma-2" 
+                  src="./assets/close.svg"/></v-btn>                
+          <v-card-subtitle class="title_support ma-2">А мы постараемся поскорее ответить</v-card-subtitle>
+            </v-card-item>
+          <v-card-text>
+            <v-card color="black" dark >
+              <form class="mx-auto" color="#D3CDBD">
+              <v-text-field v-model="user.name"
+                  :counter="100"
+                  clearable
+                  :rules="[NameRules.required, NameRules.max]"
+                  label="Полное имя"
+                  base-color="#D3CDBD"
+                  color="#D3CDBD"                                            
+                  ></v-text-field>
+              <v-text-field v-model="user.email"
+                  label="Электронная почта"
+                  type="email"
+                  disabled
+                  :counter="100"
+                  :rules="[EmailRules.required, EmailRules.min, EmailRules.max, EmailRules.email]"
+                  color="#D3CDBD"
+                  base-color="#D3CDBD"
+                  clearable
+                  ></v-text-field>
+                   <v-text-field v-model="user.support_message"
+                  :counter="100"
+                  :rules="[MessageRules.required, MessageRules.max]"
+                  label="Сообщение"
+                  color="#D3CDBD"
+                  base-color="#D3CDBD"
+                  clearable
+                  ></v-text-field>
+              </form>
+              </v-card>
+                      <v-btn
+                      @click="support_dialog = false, send_support_message()"
+                      class=" text-none text-subtitle mx-auto ma-2"
+                      light
+                      rounded="2"
+                      width="100%"
+                      target="_blank"
+                      variant="flat"
+                      color="#D3CDBD"
+                      large
+                      density="compact"
+                      >Отправить</v-btn>
+          </v-card-text>
+          </v-card>
+          </v-card>
+        </v-dialog>
+        <v-btn v-if="$route.path == '/' & !authorised()"
           @click="support_dialog = true"
           target="_blank"
           icon
@@ -74,14 +160,13 @@
               <v-text-field v-model="user.email"
                   label="Электронная почта"
                   type="email"
-                  disabled
                   :counter="100"
                   :rules="[EmailRules.required, EmailRules.min, EmailRules.max, EmailRules.email]"
                   color="#D3CDBD"
                   base-color="#D3CDBD"
                   clearable
                   ></v-text-field>
-                   <v-text-field v-model="user.support_message"
+              <v-text-field v-model="user.support_message"
                   :counter="100"
                   :rules="[MessageRules.required, MessageRules.max]"
                   label="Сообщение"
@@ -358,7 +443,7 @@
                               ></v-text-field>
                         </form>
                         <v-btn
-                          @click="password_recover_dialog = false, password_recover2_dialog = true"
+                          @click="password_recover_dialog = false, password_recover2_dialog = true, password_recovery()"
                           class=" text-none text-subtitle mx-auto ma-2"
                           light
                           rounded="2"
@@ -404,7 +489,7 @@
                                 variant="outlined"
                                 :loading="loading"
                                 color="#D3CDBD"
-                                length="6"
+                                length="8"
                               ></v-otp-input>
                           <!-- <v-text-field label="Код, отправленный на почту"
                               type="email"
@@ -438,7 +523,7 @@
                                   >
                               </v-text-field>
                         </form>
-                        <v-btn v-if="otp.length < 6 || loading"
+                        <v-btn v-if="otp.length < 8 || loading"
                           @click="onClick()"
                           class=" text-none text-subtitle mx-auto ma-2"
                           dark
@@ -452,7 +537,7 @@
                           density="compact"
                           >Восстановить пароль</v-btn>
                           <v-btn v-else
-                            @click="onClick()"
+                            @click="onClick(), password_reset(), password_recover2_dialog = false"
                             class=" text-none text-subtitle mx-auto ma-2"
                             light
                             rounded="2"
@@ -734,6 +819,17 @@ export default {
               console.log(error);
             }
       },
+       password_reset(){
+        try {
+        if(this.newPasswordFirst === this.newPasswordSecond){
+           axios.patch('http://localhost:8080/api/v1/user/password-reset', {
+                code: this.otp,
+                password: this.newPasswordFirst
+           })}
+            } catch(error) {
+              console.log(error);
+            }
+        },
 
       onClick () {
         this.loading = true

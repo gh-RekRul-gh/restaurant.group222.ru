@@ -30,15 +30,15 @@
                                             color="#D3CDBD"                                            
                                             ></v-text-field>
                                         <v-text-field v-model="user.phone_number"
-                                            placeholder="7777777777"
-                                            :counter="10"
-                                            prefix="+7"
+                                            placeholder="+77777777777"
+                                            :counter="12"
                                             :rules="[PhoneRules.required, PhoneRules.phone]"
                                             label="Номер телефона*"
                                             color="#D3CDBD"
                                             base-color="#D3CDBD"
                                             clearable
                                             ></v-text-field>
+                                            <!-- prefix="+7" -->
                                         <v-text-field v-model="user.email"
                                             label="Электронная почта"
                                             type="email"
@@ -277,13 +277,13 @@ export default {
             phone_number: "", //7777777777
             email: "", //ivanivanov@gmail.com
             address: {
-                street: "", // Студенческая улица
-                house: "", //33
-                corpus: "", //3
-                flat: '',
+                street: "", // "Студенческая улица", //
+                house:"", // "33", // 
+                corpus: "", //"3", //
+                flat: '', //"14"  // 
             },
-            courier_comment: "",
-            payment_method: "", // 1
+            courier_comment: "Без комментариев",
+            payment_method: "1", // 1
         },
          paymentMethods: {
              1 : "Оплата картой",
@@ -318,7 +318,7 @@ export default {
           required: value => !!value || 'Необходимо заполнить', //Phone is required
           phone: value => {
             // const pattern = /^\(?([0-9]{3})\)?[-. ]?([0-9]{3})[-. ]?([0-9]{2})[-. ]?([0-9]{2})$/
-            const pattern = /^([0-9]{10})$/
+            const pattern = /^\+7([0-9]{10})$/
             return pattern.test(value) || 'Неверный номер телефона' // 'Invalid phone number'
           },
         },
@@ -361,10 +361,12 @@ export default {
             this.$router.push('/')
         },
         get_addr(){
-            let addr;
-            console.log('+7' + this.user.phone_number)
-            for (let i in this.user.address)
-                addr += i
+            let addr = "";
+            // for (let i in this.user.address)
+            addr += this.user.address["street"] + ', д. '
+            addr += this.user.address["house"] + ', к. '
+            addr += this.user.address["corpus"] + ', кв.'
+            addr += this.user.address["flat"]
             return addr
         },
         get_user(){
@@ -376,7 +378,7 @@ export default {
                 let user_data = response.data.data;
                 this.user.email = user_data.email;
                 this.user.name = user_data.name;
-                this.user.phone_number = user_data.phone_number;
+                this.user.phone_number = user_data.phoneNumber;
             })
             } catch(error) {
               console.log(error);
@@ -387,18 +389,11 @@ export default {
             axios.post(`http://localhost:8080/api/v1/order`, {
                  userId: this.userId,
                  totalPrice: this.update_total_price(this.order) + 500,
-                 phoneNumber: '+7' + this.user.phone_number,
+                 phoneNumber: this.user.phone_number,
                  address: this.get_addr(),
                  courierComment: this.user.courier_comment,
                  paymentMethod: this.paymentMethods[this.user.payment_method]
             })
-            .then((response) => {
-                let cartData = response.data;
-                this.cart = [];
-                for(let i = 0; i < cartData.data.length; i += 1){
-                    this.cart.push(cartData.data[i])
-                }
-            }) 
             } catch(error) {
               console.log(error);
             }
