@@ -1,25 +1,26 @@
-# НАПИСАНО GPT (ждем от frontend-разработчиков информации о стеке):
-
 # Этап сборки
-FROM node:20-alpine AS build
+FROM node:16-alpine AS build
 
 # Установка рабочей директории
 WORKDIR /app
 
-# Копирование package.json и package-lock.json
-COPY package*.json ./
+# Копирование файлов зависимостей
+COPY the_place/package.json the_place/package-lock.json ./
 
-# Установка зависимостей
+# Установка зависимостей (включая devDependencies для сборки)
 RUN npm install
 
 # Копирование исходного кода
-COPY . .
+COPY the_place/ .
 
 # Сборка проекта
 RUN npm run build
 
 # Этап выполнения
 FROM nginx:alpine
+
+# Копирование конфигурации Nginx (если есть)
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Копирование собранных файлов в Nginx
 COPY --from=build /app/dist /usr/share/nginx/html
