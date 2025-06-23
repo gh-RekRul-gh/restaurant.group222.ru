@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/migrations/2025-02-17_1_create_tables.xml
+  - include:
+      file: db/changelog/migrations/2025-02-18_2_add_order_statuses.xml
+  - include:
+      file: db/changelog/migrations/2025-03-21_3_add_categories.xml
+  - include:
+      file: db/changelog/migrations/2025-03-21_4_add_menu_items.xml
+  - include:
+      file: db/changelog/migrations/2025-03-21_5_add_users.xml
