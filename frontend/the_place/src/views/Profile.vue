@@ -108,7 +108,7 @@
                                 <v-btn class="list_items text-none text-subtitle" 
                                        color="#D3CDBD" 
                                        light
-                                       @click="authorised = false"
+                                       @click="authorised = false, unlogin()"
                                        x-large 
                                        width="100%"
                                        target="_blank"
@@ -527,7 +527,7 @@ export default {
         show2: false,
         rules: {
           required: value => !!value || 'Необходимо заполнить', // Required
-          min: v => v.length >= 6 || 'Минимум 8 символов', // Min 8 characters
+          min: v => v.length >= 6 || 'Минимум 6 символов', // Min 8 characters
           emailMatch: () => (`The email and password you entered don't match`),
         },
         months:{
@@ -765,6 +765,10 @@ export default {
         
     },
     methods: {
+        unlogin(){
+            this.$router.push(`/`);
+            location.reload();
+        },
        get_user(){
         // let userId =  this.$route.params.userId;
         // console.log(userId)
@@ -810,7 +814,10 @@ export default {
                  for(let i = 0; i < orders_data.data.length; i += 1){
                     this.completed_orders.push(orders_data.data[i])
                  }
-                 console.log(this.completed_orders);
+                 for (let i in this.current_orders){
+                    console.log(this.current_orders[i].orderId);
+                    // console.log(this.current_orders[i].orderId);
+                 }
             
             })
             } catch(error) {
@@ -867,7 +874,7 @@ export default {
     mounted(){
         this.get_statuses();
         this.get_current_orders();
-        // this.get_completed_orders();
+        this.get_completed_orders();
         this.get_user();
         // setInterval(() => this.get_cart(), 500000); //?????
     },

@@ -41,7 +41,7 @@
         <v-divider class="border-opacity-100 mr-9 ml-9" color="#D3CDBD" v-if="((tabs_item.categoryId != 0 & currentItem == tabs_item.categoryId) | (tabs_item.categoryId != 0 & currentItem == 0)) & !check_empty_category(tabs_item)"></v-divider>
         <v-container fluid v-if="((tabs_item.categoryId != 0 & currentItem == tabs_item.categoryId) | (tabs_item.categoryId != 0 & currentItem == 0 )) & !check_empty_category(tabs_item)">
           <v-row>
-            <v-col 
+            <v-col
               v-for="item in items"
               :key="item"
               md="4"

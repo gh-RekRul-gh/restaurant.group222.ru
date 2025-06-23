@@ -365,7 +365,7 @@ export default {
             // for (let i in this.user.address)
             addr += this.user.address["street"] + ', д. '
             addr += this.user.address["house"] + ', к. '
-            addr += this.user.address["corpus"] + ', кв.'
+            addr += this.user.address["corpus"] + ', кв. '
             addr += this.user.address["flat"]
             return addr
         },
